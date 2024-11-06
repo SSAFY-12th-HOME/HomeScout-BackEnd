@@ -15,6 +15,7 @@ public class UserController {
 
     @GetMapping("/test")
     public String test() {
+        System.out.println("test");
         return String.valueOf(userService.select());
     }
 }
