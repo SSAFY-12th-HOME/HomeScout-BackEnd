@@ -10,7 +10,7 @@ public interface UserMapper {
 
     boolean existsByEmail(String email);
 
-    User findUserByEmail(LoginRequestDto loginRequestDto);
+    User findUserByEmail(String email);
 
     boolean existsByNickname(String nickname);
 

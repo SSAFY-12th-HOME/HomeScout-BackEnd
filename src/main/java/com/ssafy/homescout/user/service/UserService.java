@@ -3,6 +3,7 @@ package com.ssafy.homescout.user.service;
 import com.ssafy.homescout.entity.User;
 import com.ssafy.homescout.user.dto.SignupRequestDto;
 import com.ssafy.homescout.user.dto.LoginRequestDto;
+import com.ssafy.homescout.user.dto.UserInfoResponseDto;
 import com.ssafy.homescout.user.mapper.UserMapper;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +55,7 @@ public class UserService {
 
     public void login(LoginRequestDto loginRequestDto, HttpSession session) {
 
-        User user = userMapper.findUserByEmail(loginRequestDto);
+        User user = userMapper.findUserByEmail(loginRequestDto.getEmail());
 
         //로그인 실패
         if(user == null || !passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
@@ -64,5 +65,21 @@ public class UserService {
         //로그인 성공 후 session에 email 저장
         session.setAttribute("loginUser", user.getEmail());
 
+    }
+
+    public UserInfoResponseDto getUserInfo(HttpSession session) {
+
+        String email = (String) session.getAttribute("loginUser");
+
+        User findUser =  userMapper.findUserByEmail("ssafy2@naver.com");
+
+        UserInfoResponseDto userInfoResponseDto = UserInfoResponseDto.builder()
+                .userId(findUser.getUserId())
+                .email(findUser.getEmail())
+                .nickname(findUser.getNickname())
+                .phone(findUser.getPhone())
+                .build();
+
+        return userInfoResponseDto;
     }
 }

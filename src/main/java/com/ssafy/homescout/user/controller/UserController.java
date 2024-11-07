@@ -2,6 +2,7 @@ package com.ssafy.homescout.user.controller;
 
 import com.ssafy.homescout.user.dto.SignupRequestDto;
 import com.ssafy.homescout.user.dto.LoginRequestDto;
+import com.ssafy.homescout.user.dto.UserInfoResponseDto;
 import com.ssafy.homescout.user.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -29,9 +30,15 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto, HttpSession session) {
-
         userService.login(loginRequestDto, session);
         return ResponseEntity.ok("로그인에 성공했습니다.");
-
     }
+
+    @GetMapping
+    public ResponseEntity<?> getUserInfo(HttpSession session) {
+        UserInfoResponseDto userInfo = userService.getUserInfo(session);
+
+        return ResponseEntity.ok(userInfo);
+    }
+
 }
