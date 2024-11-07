@@ -1,8 +1,11 @@
 package com.ssafy.homescout.user.service;
 
 import com.ssafy.homescout.entity.User;
+import com.ssafy.homescout.user.dto.LoginRequestDto;
+import com.ssafy.homescout.user.dto.LoginResponseDto;
 import com.ssafy.homescout.user.dto.UserRegisterDto;
 import com.ssafy.homescout.user.mapper.UserMapper;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -47,5 +50,19 @@ public class UserService {
 
         // 사용자 저장
         userMapper.save(user);
+    }
+
+    public void login(LoginRequestDto loginRequestDto, HttpSession session) {
+
+        User user = userMapper.findUserByEmail(loginRequestDto);
+
+        //로그인 실패
+        if(user == null || !passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이메일 또는 비밀번호가 잘못되었습니다.");
+        }
+
+        //로그인 성공 후 session에 email 저장
+        session.setAttribute("loginUser", user.getEmail());
+
     }
 }

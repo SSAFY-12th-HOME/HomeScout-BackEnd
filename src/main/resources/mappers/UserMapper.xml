@@ -15,4 +15,8 @@
         )
     </select>
 
+    <select id="findUserByEmail" parameterType="com.ssafy.homescout.entity.User">
+        select * from user where email = #{email}
+    </select>
+
 </mapper>
