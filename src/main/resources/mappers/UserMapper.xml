@@ -4,8 +4,15 @@
 
 <mapper namespace="com.ssafy.homescout.user.mapper.UserMapper">
 
-    <select id="select">
-        select 1 from dual;
+    <insert id="save" parameterType="com.ssafy.homescout.entity.User">
+        insert into user (email, password, nickname, phone)
+        values (#{email}, #{password}, #{nickname}, #{phone})
+    </insert>
+
+    <select id="existsByEmail" parameterType="string" resultType="boolean">
+        select exists (
+            select 1 from user where email = #{email}
+        )
     </select>
 
 </mapper>
