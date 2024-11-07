@@ -1,9 +1,8 @@
 package com.ssafy.homescout.user.service;
 
 import com.ssafy.homescout.entity.User;
+import com.ssafy.homescout.user.dto.SignupRequestDto;
 import com.ssafy.homescout.user.dto.LoginRequestDto;
-import com.ssafy.homescout.user.dto.LoginResponseDto;
-import com.ssafy.homescout.user.dto.UserRegisterDto;
 import com.ssafy.homescout.user.mapper.UserMapper;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -21,31 +20,32 @@ public class UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
-    public void signUp(UserRegisterDto registerDto) {
+    public void signUp(SignupRequestDto signupRequestDto) {
         // 이메일 중복 검사
-        if (userMapper.existsByEmail(registerDto.getEmail())) {
+        if (userMapper.existsByEmail(signupRequestDto.getEmail())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 사용 중인 이메일입니다.");
         }
 
-        // 이메일 인증 코드 확인
-//        if (!emailService.verifyEmailCode(registerDto.getEmail(), registerDto.getEmailConfirm())) {
-//            throw new IllegalArgumentException("이메일 인증에 실패했습니다.");
-//        }
+        // 닉네임 중복 검사
+        if (userMapper.existsByNickname(signupRequestDto.getNickname())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 사용 중인 닉네임입니다.");
+        }
 
         // 비밀번호 확인
-        if (!registerDto.getPassword().equals(registerDto.getPasswordConfirm())) {
+        if (!signupRequestDto.getPassword().equals(signupRequestDto.getPasswordConfirm())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다.");
         }
 
         // 비밀번호 암호화
-        String encodedPassword = passwordEncoder.encode(registerDto.getPassword());
+        String encodedPassword = passwordEncoder.encode(signupRequestDto.getPassword());
 
         // 사용자 엔티티 생성
         User user = User.builder()
-                .email(registerDto.getEmail())
+                .email(signupRequestDto.getEmail())
                 .password(encodedPassword)
-                .nickname(registerDto.getNickname())
-                .phone(registerDto.getPhone())
+                .nickname(signupRequestDto.getNickname())
+                .phone(signupRequestDto.getPhone())
+                .role(signupRequestDto.getRole())
                 .build();
 
         // 사용자 저장

@@ -11,4 +11,8 @@ public interface UserMapper {
     boolean existsByEmail(String email);
 
     User findUserByEmail(LoginRequestDto loginRequestDto);
+
+    boolean existsByNickname(String nickname);
+
+    User findUserByUserId(Long userId);
 }

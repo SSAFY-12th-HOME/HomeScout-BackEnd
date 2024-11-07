@@ -5,8 +5,8 @@
 <mapper namespace="com.ssafy.homescout.user.mapper.UserMapper">
 
     <insert id="save" parameterType="com.ssafy.homescout.entity.User">
-        insert into user (email, password, nickname, phone)
-        values (#{email}, #{password}, #{nickname}, #{phone})
+        insert into user (email, password, nickname, phone, role)
+        values (#{email}, #{password}, #{nickname}, #{phone}, #{role})
     </insert>
 
     <select id="existsByEmail" parameterType="string" resultType="boolean">
@@ -17,6 +17,16 @@
 
     <select id="findUserByEmail" parameterType="com.ssafy.homescout.entity.User">
         select * from user where email = #{email}
+    </select>
+
+    <select id="existsByNickname" parameterType="string" resultType="boolean">
+        select exists (
+            select 1 from user where nickname = #{nickname}
+        )
+    </select>
+
+    <select id="findUserByUserId" resultType="com.ssafy.homescout.entity.User">
+        select * from user where user_id = #{userId}
     </select>
 
 </mapper>
