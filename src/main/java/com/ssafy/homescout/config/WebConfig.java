@@ -8,6 +8,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+
+    private final String[] EXCLUDE_PATH = {
+            "/error",
+            "/user", "/user/login", "/user/logout",
+            "/auth/nickname-duplication", "/auth/email-duplication", "/auth/email-code", "/auth/email"
+    };
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
@@ -21,7 +28,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginCheckInterceptor())
                 .addPathPatterns("/**") /// 인터셉터를 적용할 URL 패턴 (모든 경로 적용)
-                .excludePathPatterns("/user", "/user/login", "/user/logout", "/error"); // 인터셉터 적용을 제외할 URL 패턴
+                .excludePathPatterns(EXCLUDE_PATH); // 인터셉터 적용을 제외할 URL 패턴
     }
 
 }

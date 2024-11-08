@@ -1,5 +1,6 @@
 package com.ssafy.homescout.user.service;
 
+import com.ssafy.homescout.auth.service.AuthService;
 import com.ssafy.homescout.entity.User;
 import com.ssafy.homescout.user.dto.SignupRequestDto;
 import com.ssafy.homescout.user.dto.LoginRequestDto;
@@ -36,6 +37,11 @@ public class UserService {
         if (!signupRequestDto.getPassword().equals(signupRequestDto.getPasswordConfirm())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다.");
         }
+
+        // 인증번호 한번 더 확인 (인증번호 확인 API에서 확인했지만, 클라이언트 변조 방지를 위해)
+//        if(AuthService.emailAuthCode.getOrDefault(signupRequestDto.getEmail(), "").equals(signupRequestDto.getEmailCode())) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "인증코드가 일치하지 않습니다.");
+//        }
 
         // 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(signupRequestDto.getPassword());

@@ -25,7 +25,7 @@ public class AuthService {
     private final UserMapper userMapper;
     private final JavaMailSender javaMailSender;
     private final PasswordEncoder passwordEncoder;
-    private static final Map<String, String> emailAuthCode = new HashMap<>();
+    public static final Map<String, String> emailAuthCode = new HashMap<>();
 
     // 이메일 중복 체크
     public void emailDuplication(String email) {
@@ -95,7 +95,7 @@ public class AuthService {
 
         // 이메일 인증 코드가 Map에 없으면 오류
         if(!emailAuthCode.containsKey(email)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "인증코드 전송을 먼저 해주세요.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "인증코드를 먼저 전송 해주세요.");
         }
 
         if(!emailAuthCode.get(email).equals(authCode)) {
@@ -105,6 +105,7 @@ public class AuthService {
 
     public void checkPassword(PasswordRequestDto passwordRequestDto) {
         String rawPassword = passwordRequestDto.getPassword();
+        // TODO userId 수정하기
         String encodedPassword = userMapper.findUserByUserId(1L).getPassword();
 
         if(!passwordEncoder.matches(rawPassword, encodedPassword)) {
