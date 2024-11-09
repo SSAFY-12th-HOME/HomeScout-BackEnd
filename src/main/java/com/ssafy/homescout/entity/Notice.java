@@ -8,7 +8,7 @@ import lombok.*;
 @Getter
 public class Notice {
 
-    private String noticeId;
+    private Long noticeId;
     private String title;
     private String content;
     private String img;

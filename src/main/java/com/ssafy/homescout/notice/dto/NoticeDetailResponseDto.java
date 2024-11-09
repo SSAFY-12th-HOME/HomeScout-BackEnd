@@ -7,10 +7,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class NoticeListResponseDto {
+public class NoticeDetailResponseDto {
 
     private Long noticeId;
     private String title;
+    private String content;
+    private String img;
     private String createdAt;
-
 }

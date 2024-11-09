@@ -4,8 +4,14 @@
 
 <mapper namespace="com.ssafy.homescout.notice.mapper.NoticeMapper">
 
+
     <select id="selectAllNotice">
         select * from notice;
+    </select>
+
+
+    <select id="selectNoticeById">
+        select * from notice where notice_id = #{noticeId}
     </select>
 
 </mapper>
