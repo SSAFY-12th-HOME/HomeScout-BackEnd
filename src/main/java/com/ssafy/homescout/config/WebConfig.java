@@ -10,9 +10,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
 
     private final String[] EXCLUDE_PATH = {
-            "/error",
+            "/error", "/api-test", "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**",
             "/user", "/user/login", "/user/logout",
-            "/auth/nickname-duplication", "/auth/email-duplication", "/auth/email-code", "/auth/email"
+            "/auth/nickname-duplication", "/auth/email-duplication", "/auth/email-code", "/auth/email",
+            "/apt"
     };
 
     @Override
