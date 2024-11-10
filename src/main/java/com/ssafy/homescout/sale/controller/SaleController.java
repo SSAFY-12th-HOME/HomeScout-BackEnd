@@ -5,9 +5,11 @@ import com.ssafy.homescout.sale.dto.SaleRequestDto;
 import com.ssafy.homescout.sale.service.SaleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/sale")
@@ -41,6 +43,31 @@ public class SaleController {
     @DeleteMapping("/{saleId}")
     public ResponseEntity<?> removeSale(@PathVariable("saleId") Long saleId) {
         saleService.removeSale(saleId);
+        return ResponseEntity.ok().build();
+    }
+
+    // 관심 매물 리스트 조회
+    @GetMapping("/wish")
+    public ResponseEntity<?> getMyWishSaleList() {
+        return ResponseEntity.ok(saleService.getMyWishSaleList());
+    }
+
+    // 관심 매물 등록
+    @PostMapping("/{saleId}/wish")
+    public ResponseEntity<?> registerWishSale(@PathVariable("saleId") Long saleId) {
+        try {
+            saleService.registerWishSale(saleId);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 매물입니다.");
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    // 관심 매물 삭제
+    @DeleteMapping("/{saleId}/wish/{wishSaleId}")
+    public ResponseEntity<?> removeWishSale(@PathVariable("saleId") Long saleId,
+                                            @PathVariable("wishSaleId") Long wishSaleId) {
+        saleService.removeWishSale(saleId, wishSaleId);
         return ResponseEntity.ok().build();
     }
 

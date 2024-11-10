@@ -86,4 +86,71 @@
         where sale_id=#{saleId}
     </delete>
 
+    <insert id="insertWishSale">
+        insert into wish_sale(sale_id, user_id)
+        values (#{saleId}, #{userId})
+    </insert>
+
+    <select id="selectWishSaleById">
+        select * from wish_sale where wish_sale_id=#{wishSaleId}
+    </select>
+
+    <delete id="deleteWishSale">
+        delete from wish_sale where wish_sale_id=#{wishSaleId}
+    </delete>
+
+    <resultMap id="WishSaleResponseDto" type="com.ssafy.homescout.sale.dto.WishSaleResponseDto">
+        <id property="wishSaleId" column="wish_sale_id"/>
+        <result property="saleId" column="sale_id"/>
+        <result property="aptId" column="apt_id"/>
+        <result property="aptNm" column="apt_nm"/>
+        <result property="type" column="type"/>
+        <result property="price" column="price"/>
+        <result property="deposit" column="deposit"/>
+        <result property="rentalFee" column="rental_fee"/>
+        <result property="dong" column="dong"/>
+        <result property="floor" column="floor"/>
+        <result property="area" column="area"/>
+        <result property="tag1" column="tag1"/>
+        <result property="tag2" column="tag2"/>
+        <result property="tag3" column="tag3"/>
+        <association property="realtor" javaType="com.ssafy.homescout.sale.dto.RealtorInfo">
+            <id property="userId" column="user_id"/>
+            <result property="nickname" column="nickname"/>
+            <result property="profileImg" column="profile_img"/>
+            <result property="phone" column="phone"/>
+            <result property="isBadge" column="is_badge"/>
+        </association>
+    </resultMap>
+
+    <select id="selectWishSalesByUserId" resultMap="WishSaleResponseDto">
+        SELECT
+            w.wish_sale_id,
+            s.sale_id,
+            s.apt_id,
+            (select apt_nm from apt where apt_id=s.apt_id) apt_nm,
+            s.type,
+            s.price,
+            s.deposit,
+            s.rental_fee,
+            s.dong,
+            s.floor,
+            s.area,
+            s.tag1,
+            s.tag2,
+            s.tag3,
+            u.user_id,
+            u.nickname,
+            u.profile_img,
+            u.phone,
+            (u.exp = 1000) is_badge
+        FROM
+            sale s
+                INNER JOIN
+            wish_sale w
+                INNER JOIN
+            user u ON w.sale_id = s.sale_id AND s.user_id = u.user_id
+        WHERE w.user_id = #{userId}
+    </select>
+
 </mapper>

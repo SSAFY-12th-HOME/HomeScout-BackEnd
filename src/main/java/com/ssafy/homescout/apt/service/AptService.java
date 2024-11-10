@@ -94,6 +94,7 @@ public class AptService {
         aptLifeStoryList.forEach(o -> o.setCreated(ChronoUtil.timesAgo(o.getCreatedAt())));
 
 
+        // TODO isWish 처리
         AptResponseDto aptResponseDto = AptResponseDto.builder()
                 .aptId(aptId)
                 .aptInfo(aptInfo)
