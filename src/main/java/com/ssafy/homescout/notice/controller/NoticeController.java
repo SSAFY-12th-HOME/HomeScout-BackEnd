@@ -39,4 +39,10 @@ public class NoticeController {
                                         @RequestBody NoticeEditRequestDto noticeEditRequestDto){
         return ResponseEntity.ok(noticeService.editNotice(noticeId, noticeEditRequestDto));
     }
+
+    @DeleteMapping("/{noticeId}")
+    public ResponseEntity<?> deleteNotice(@PathVariable("noticeId") Long noticeId){
+        noticeService.removeNotice(noticeId);
+        return ResponseEntity.ok("게시글이 삭제되었습니다.");
+    }
 }

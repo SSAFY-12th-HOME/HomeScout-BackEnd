@@ -19,4 +19,6 @@ public interface NoticeMapper {
     void insertNotice(Notice notice);
 
     int updateNotice(@Param("noticeId") Long noticeId, @Param("request") NoticeEditRequestDto noticeEditRequestDto);
+
+    int deleteNoticeById(Long noticeId);
 }

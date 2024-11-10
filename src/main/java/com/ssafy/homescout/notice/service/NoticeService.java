@@ -60,4 +60,13 @@ public class NoticeService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"공지사항 수정에 실패했습니다.");
         }
     }
+
+    public void removeNotice(Long noticeId) {
+
+        int result = noticeMapper.deleteNoticeById(noticeId);
+
+        if (result == 0)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"공지사항 삭제에 실패했습니다.");
+    }
 }
+
