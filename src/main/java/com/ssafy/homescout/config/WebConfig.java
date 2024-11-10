@@ -14,7 +14,8 @@ public class WebConfig implements WebMvcConfigurer {
             "/user", "/user/login", "/user/logout",
             "/auth/nickname-duplication", "/auth/email-duplication", "/auth/email-code", "/auth/email",
             "/apt", "/apt/**",
-            "/notice/**"
+            "/notice/**",
+            "/sale/**"
     };
 
     @Override
