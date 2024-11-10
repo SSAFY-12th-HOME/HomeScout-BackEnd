@@ -8,4 +8,103 @@
         select apt_id, latitude, longitude from apt;
     </select>
 
+    <select id="selectAptByAptId" resultType="com.ssafy.homescout.entity.Apt">
+        select * from apt where apt_id=#{aptId}
+    </select>
+
+    <resultMap id="AptSalesInfo" type="com.ssafy.homescout.apt.dto.AptSaleInfo">
+        <id property="saleId" column="sale_id"/>
+        <result property="type" column="type"/>
+        <result property="price" column="price"/>
+        <result property="deposit" column="deposit"/>
+        <result property="rentalFee" column="rental_fee"/>
+        <result property="dong" column="dong"/>
+        <result property="floor" column="floor"/>
+        <result property="area" column="area"/>
+        <result property="tag1" column="tag1"/>
+        <result property="tag2" column="tag2"/>
+        <result property="tag3" column="tag3"/>
+        <!-- Realtor(User) 정보를 중첩 객체로 매핑 -->
+        <association property="realtor" javaType="com.ssafy.homescout.apt.dto.RealtorInfo">
+            <id property="userId" column="user_id"/>
+            <result property="nickname" column="nickname"/>
+            <result property="profileImg" column="profile_img"/>
+            <result property="phone" column="phone"/>
+            <result property="isBadge" column="is_badge"/>
+        </association>
+    </resultMap>
+    <select id="selectAptSalesByAptId" resultMap="AptSalesInfo">
+        SELECT
+            s.sale_id,
+            s.type,
+            s.price,
+            s.deposit,
+            s.rental_fee,
+            s.dong,
+            s.floor,
+            s.area,
+            s.tag1,
+            s.tag2,
+            s.tag3,
+            u.user_id,
+            u.nickname,
+            u.profile_img,
+            u.phone,
+            (u.exp = 1000) is_badge
+        FROM
+            sale s
+                INNER JOIN
+            user u ON s.user_id = u.user_id
+        WHERE
+            s.apt_id = #{aptId}
+    </select>
+
+    <select id="selectAptDealsByAptId">
+        select * from aptdeal where apt_id like #{aptId} order by deal_year desc, deal_month desc, deal_day desc limit 0, 5
+    </select>
+
+    <select id="selectSubwaysByLatLng">
+        SELECT
+        *,
+        ( 6371 * acos( cos( radians(#{lat}) ) * cos( radians( `lat` ) ) * cos( radians( `lng` ) - radians(#{lng}) ) + sin( radians(#{lat}) ) * sin( radians( `lat` ) ) ) )*1000 AS distance
+        FROM `subway`
+        HAVING distance &lt; 1000
+        ORDER BY distance ASC;
+    </select>
+
+    <resultMap id="AptLifeStory" type="com.ssafy.homescout.apt.dto.AptLifeStory">
+        <id property="lifeStoryId" column="life_story_id"/>
+        <result property="content" column="content"/>
+        <result property="createdAt" column="created_at"/>
+        <!-- Realtor(User) 정보를 중첩 객체로 매핑 -->
+        <association property="writer" javaType="com.ssafy.homescout.apt.dto.WriterInfo">
+            <id property="userId" column="user_id"/>
+            <result property="nickname" column="nickname"/>
+            <result property="profileImg" column="profile_img"/>
+        </association>
+    </resultMap>
+    <select id="selectAptLifeStoriesByAptId" resultMap="AptLifeStory">
+        select
+            l.life_story_id,
+            l.content,
+            l.created_at,
+            u.user_id,
+            u.nickname,
+            u.profile_img
+        from
+            life_story l
+                inner join
+            user u on l.user_id = u.user_id
+        order by created_at desc
+        limit 0, 3;
+    </select>
+
+    <select id="selectDongcodeByDongCd">
+        select * from dongcode where dong_cd=#{dongCd};
+    </select>
+
+    <insert id="insertLifeStory">
+        insert into life_story (apt_id, user_id, content)
+        values (#{aptId}, #{userId}, #{content})
+    </insert>
 </mapper>

@@ -17,7 +17,7 @@ public class Apt {
     private String roadNmBonbun;
     private String roadNmBubun;
     private String aptNm;
-    private String buildYear;
+    private Integer buildYear;
     private String latitude;
     private String longitude;
 

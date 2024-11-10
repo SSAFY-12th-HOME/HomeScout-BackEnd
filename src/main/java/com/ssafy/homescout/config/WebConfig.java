@@ -13,7 +13,8 @@ public class WebConfig implements WebMvcConfigurer {
             "/error", "/api-test", "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**",
             "/user", "/user/login", "/user/logout",
             "/auth/nickname-duplication", "/auth/email-duplication", "/auth/email-code", "/auth/email",
-            "/apt"
+            "/apt", "/apt/**",
+            "/notice/**"
     };
 
     @Override

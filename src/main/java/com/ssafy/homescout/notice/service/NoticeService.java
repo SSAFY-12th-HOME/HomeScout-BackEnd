@@ -25,7 +25,7 @@ public class NoticeService {
 
     public NoticeDetailResponseDto getNoticeById(Long noticeId) {
         NoticeDetailResponseDto notice = noticeMapper.selectNoticeById(noticeId);
-
+        System.out.println(notice);
         //게시글 상세 조회 실패
         if(notice == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 게시글입니다.");
