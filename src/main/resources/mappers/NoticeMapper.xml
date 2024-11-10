@@ -21,4 +21,10 @@
                DATE_FORMAT(created_at, '%Y-%m-%d') from notice where notice_id = #{noticeId}
     </select>
 
+    <insert id="insertNotice" useGeneratedKeys="true" keyProperty="noticeId">
+        insert into notice (title, content, img, created_at)
+        value (#{title}, #{content}, #{img}, NOW());
+    </insert>
+
+
 </mapper>

@@ -1,12 +1,12 @@
 package com.ssafy.homescout.notice.controller;
 
+import com.ssafy.homescout.entity.Notice;
+import com.ssafy.homescout.notice.dto.NoticeRegistRequestDto;
 import com.ssafy.homescout.notice.service.NoticeService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/notice")
@@ -21,9 +21,16 @@ public class NoticeController {
         return ResponseEntity.ok(noticeService.getAllNotices());
     }
 
-    //게시글 상세 조회
+    //공지사항 상세 조회
     @GetMapping("/{noticeId}")
     public ResponseEntity<?> getById(@PathVariable("noticeId") Long noticeId){
         return ResponseEntity.ok(noticeService.getNoticeById(noticeId));
     }
+
+    //공지사항 등록
+    @PostMapping
+    public ResponseEntity<?> regist(@Valid @RequestBody NoticeRegistRequestDto noticeRegistRequestDto){
+        return ResponseEntity.ok(noticeService.createNotice(noticeRegistRequestDto));
+    }
+
 }
