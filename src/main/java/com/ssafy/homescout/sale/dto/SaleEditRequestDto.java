@@ -1,17 +1,14 @@
-package com.ssafy.homescout.entity;
+package com.ssafy.homescout.sale.dto;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class Sale {
+public class SaleEditRequestDto {
 
-    private Long saleId;
-    private String aptId;
-    private Long userId;
     private String type;
     private Integer price;
     private Integer deposit;

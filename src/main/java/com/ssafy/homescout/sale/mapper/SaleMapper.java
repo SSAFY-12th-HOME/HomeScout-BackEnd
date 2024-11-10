@@ -12,4 +12,10 @@ public interface SaleMapper {
     void insertSale(Sale sale);
 
     List<SaleResponseDto> selectSalesByUserId(Long userId);
+
+    Sale selectSaleBySaleId(Long saleId);
+
+    void updateSale(Sale sale);
+
+    void deleteSale(Long saleId);
 }

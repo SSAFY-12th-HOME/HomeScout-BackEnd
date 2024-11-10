@@ -60,4 +60,30 @@
         values (#{aptId}, #{userId}, #{type}, #{price}, #{deposit}, #{rentalFee}, #{dong}, #{floor}, #{area}, #{tag1}, #{tag2}, #{tag3})
     </insert>
 
+    <select id="selectSaleBySaleId">
+        select * from sale where sale_id=#{saleId}
+    </select>
+
+    <update id="updateSale">
+        update sale
+        set
+            type=#{type},
+            price=#{price},
+            deposit=#{deposit},
+            rental_fee=#{rentalFee},
+            dong=#{dong},
+            floor=#{floor},
+            area=#{area},
+            tag1=#{tag1},
+            tag2=#{tag2},
+            tag3=#{tag3}
+        where
+            sale_id=#{saleId}
+    </update>
+
+    <delete id="deleteSale">
+        delete from sale
+        where sale_id=#{saleId}
+    </delete>
+
 </mapper>
