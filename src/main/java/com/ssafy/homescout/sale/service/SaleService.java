@@ -2,10 +2,13 @@ package com.ssafy.homescout.sale.service;
 
 import com.ssafy.homescout.entity.Sale;
 import com.ssafy.homescout.sale.dto.SaleRequestDto;
+import com.ssafy.homescout.sale.dto.SaleResponseDto;
 import com.ssafy.homescout.sale.mapper.SaleMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -35,5 +38,11 @@ public class SaleService {
         saleMapper.insertSale(sale);
 
         return sale;
+    }
+
+    public List<SaleResponseDto> getMySaleList() {
+        Long userId = 1L; // TODO userId 수정
+
+        return saleMapper.selectSalesByUserId(userId);
     }
 }

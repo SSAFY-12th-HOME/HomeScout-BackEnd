@@ -6,10 +6,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/sale")
@@ -19,6 +16,13 @@ public class SaleController {
 
     private final SaleService saleService;
 
+    // 내가 등록한 매물 리스트 조회
+    @GetMapping
+    public ResponseEntity<?> getMySaleList() {
+        return ResponseEntity.ok(saleService.getMySaleList());
+    }
+
+    // 매물 등록
     @PostMapping
     public ResponseEntity<?> registerSale(
             @Valid @RequestBody SaleRequestDto saleRequestDto) {
