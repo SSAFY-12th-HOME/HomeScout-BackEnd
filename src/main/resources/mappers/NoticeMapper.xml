@@ -6,12 +6,19 @@
 
 
     <select id="selectAllNotice">
-        select * from notice;
+        select notice_id,
+               title,
+               DATE_FORMAT(created_at, '%Y-%m-%d')
+               from notice;
     </select>
 
 
     <select id="selectNoticeById">
-        select * from notice where notice_id = #{noticeId}
+        select notice_id,
+               title,
+               content,
+               img,
+               DATE_FORMAT(created_at, '%Y-%m-%d') from notice where notice_id = #{noticeId}
     </select>
 
 </mapper>
