@@ -103,8 +103,12 @@
         select * from dongcode where dong_cd=#{dongCd};
     </select>
 
-    <insert id="insertLifeStory">
+    <insert id="insertLifeStory" useGeneratedKeys="true" keyProperty="lifeStoryId">
         insert into life_story (apt_id, user_id, content)
         values (#{aptId}, #{userId}, #{content})
     </insert>
+
+    <select id="selectLifeStoryById">
+        select * from life_story where life_story_id=#{lifeStoryId}
+    </select>
 </mapper>

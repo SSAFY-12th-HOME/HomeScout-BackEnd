@@ -3,10 +3,8 @@ package com.ssafy.homescout.apt.mapper;
 import com.ssafy.homescout.apt.dto.AptLifeStory;
 import com.ssafy.homescout.apt.dto.AptPosResponseDto;
 import com.ssafy.homescout.apt.dto.AptSaleInfo;
-import com.ssafy.homescout.entity.Apt;
-import com.ssafy.homescout.entity.AptDeal;
-import com.ssafy.homescout.entity.Dongcode;
-import com.ssafy.homescout.entity.Subway;
+import com.ssafy.homescout.apt.dto.LifeStoryResponseDto;
+import com.ssafy.homescout.entity.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -29,5 +27,7 @@ public interface AptMapper {
 
     Dongcode selectDongcodeByDongCd(String dongCd);
 
-    void insertLifeStory(@Param("aptId") String aptId, @Param("userId") Long userId, @Param("content") String content);
+    void insertLifeStory(LifeStory lifeStory);
+
+    LifeStoryResponseDto selectLifeStoryById(Long lifeStoryId);
 }

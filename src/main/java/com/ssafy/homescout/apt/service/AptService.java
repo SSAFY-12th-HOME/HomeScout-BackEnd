@@ -2,10 +2,7 @@ package com.ssafy.homescout.apt.service;
 
 import com.ssafy.homescout.apt.dto.*;
 import com.ssafy.homescout.apt.mapper.AptMapper;
-import com.ssafy.homescout.entity.Apt;
-import com.ssafy.homescout.entity.AptDeal;
-import com.ssafy.homescout.entity.Dongcode;
-import com.ssafy.homescout.entity.Subway;
+import com.ssafy.homescout.entity.*;
 import com.ssafy.homescout.util.ChronoUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -110,7 +107,15 @@ public class AptService {
     public LifeStoryResponseDto writeLifeStory(String aptId, LifeStoryRequestDto lifeStoryRequestDto) {
         // TODO userId 현재 로그인한 유저로 수정하기
         Long userId = 1L;
-        aptMapper.insertLifeStory(aptId, userId, lifeStoryRequestDto.getContent());
-        return null;
+
+        LifeStory lifeStory = LifeStory.builder()
+                .aptId(aptId)
+                .userId(userId)
+                .content(lifeStoryRequestDto.getContent())
+                .build();
+
+        aptMapper.insertLifeStory(lifeStory);
+
+        return aptMapper.selectLifeStoryById(lifeStory.getLifeStoryId());
     }
 }
