@@ -1,6 +1,6 @@
 package com.ssafy.homescout.notice.controller;
 
-import com.ssafy.homescout.entity.Notice;
+import com.ssafy.homescout.notice.dto.NoticeEditRequestDto;
 import com.ssafy.homescout.notice.dto.NoticeRegistRequestDto;
 import com.ssafy.homescout.notice.service.NoticeService;
 import jakarta.validation.Valid;
@@ -33,4 +33,10 @@ public class NoticeController {
         return ResponseEntity.ok(noticeService.createNotice(noticeRegistRequestDto));
     }
 
+    //공지사항 수정
+    @PutMapping("/{noticeId}")
+    public ResponseEntity<?> editNotice(@PathVariable("noticeId") Long noticeId,
+                                        @RequestBody NoticeEditRequestDto noticeEditRequestDto){
+        return ResponseEntity.ok(noticeService.editNotice(noticeId, noticeEditRequestDto));
+    }
 }

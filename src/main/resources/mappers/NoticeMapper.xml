@@ -26,5 +26,9 @@
         value (#{title}, #{content}, #{img}, NOW());
     </insert>
 
+    <update id="updateNotice" parameterType="map">
+        update notice set title = #{request.title}, content = #{request.content}, img = #{request.img}
+        where notice_id = #{noticeId}
+    </update>
 
 </mapper>

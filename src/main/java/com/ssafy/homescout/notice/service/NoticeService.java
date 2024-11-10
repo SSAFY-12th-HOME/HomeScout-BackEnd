@@ -2,6 +2,7 @@ package com.ssafy.homescout.notice.service;
 
 import com.ssafy.homescout.entity.Notice;
 import com.ssafy.homescout.notice.dto.NoticeDetailResponseDto;
+import com.ssafy.homescout.notice.dto.NoticeEditRequestDto;
 import com.ssafy.homescout.notice.dto.NoticeListResponseDto;
 import com.ssafy.homescout.notice.dto.NoticeRegistRequestDto;
 import com.ssafy.homescout.notice.mapper.NoticeMapper;
@@ -46,5 +47,17 @@ public class NoticeService {
 
         // 등록된 ID 가져와서 등록된 게시글 상세 조회
         return noticeMapper.selectNoticeById(notice.getNoticeId());
+    }
+
+    public NoticeDetailResponseDto editNotice(Long noticeId, NoticeEditRequestDto noticeEditRequestDto) {
+
+        int result = noticeMapper.updateNotice(noticeId, noticeEditRequestDto);
+
+        if(result > 0 ) {
+            return noticeMapper.selectNoticeById(noticeId);
+        }
+        else{
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"공지사항 수정에 실패했습니다.");
+        }
     }
 }
