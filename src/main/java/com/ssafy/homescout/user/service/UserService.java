@@ -75,24 +75,27 @@ public class UserService {
 
     }
 
-    public UserInfoResponseDto getUserInfo(HttpSession session) {
+    public UserInfoResponseDto getUserInfo() {
 
-        String email = (String) session.getAttribute("loginUser");
+//        String email = (String) session.getAttribute("loginUser");
+        Long userId = 1L; // TODO uesrId 수정
 
-        User findUser =  userMapper.findUserByEmail("ssafy2@naver.com");
+//        User findUser =  userMapper.findUserByEmail("ssafy2@naver.com");
+        User user = userMapper.findUserByUserId(userId);
 
-        UserInfoResponseDto userInfoResponseDto = UserInfoResponseDto.builder()
-                .userId(findUser.getUserId())
-                .email(findUser.getEmail())
-                .nickname(findUser.getNickname())
-                .phone(findUser.getPhone())
-                .build();
+//        UserInfoResponseDto userInfoResponseDto = UserInfoResponseDto.builder()
+//                .userId(user.getUserId())
+//                .email(user.getEmail())
+//                .nickname(user.getNickname())
+//                .phone(user.getPhone())
+//                .build();
 
-        return userInfoResponseDto;
+        return UserInfoResponseDto.of(user);
     }
 
     public MyPageResponseDto getMyPage() {
-        User user = userMapper.findUserByUserId(1L); // TODO userId 수정
+        Long userId = 1L; // TODO userId 수정
+        User user = userMapper.findUserByUserId(userId);
         return MyPageResponseDto.of(user);
     }
 
