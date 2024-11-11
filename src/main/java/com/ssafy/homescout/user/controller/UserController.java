@@ -1,5 +1,6 @@
 package com.ssafy.homescout.user.controller;
 
+import com.ssafy.homescout.user.dto.EditUserRequestDto;
 import com.ssafy.homescout.user.dto.SignupRequestDto;
 import com.ssafy.homescout.user.dto.LoginRequestDto;
 import com.ssafy.homescout.user.dto.UserInfoResponseDto;
@@ -57,6 +58,19 @@ public class UserController {
         else{
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 로그아웃 상태입니다.");
         }
+    }
+
+    // 마이페이지
+    @GetMapping("/mypage")
+    public ResponseEntity<?> getMyPage() {
+        return ResponseEntity.ok(userService.getMyPage());
+    }
+
+    // 회원정보 수정
+    @PutMapping
+    public ResponseEntity<?> editUser(@Valid @RequestBody EditUserRequestDto editUserRequestDto) {
+        userService.editUser(editUserRequestDto);
+        return ResponseEntity.ok().build();
     }
 
 }

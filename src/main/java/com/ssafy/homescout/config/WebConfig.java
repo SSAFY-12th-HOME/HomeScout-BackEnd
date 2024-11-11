@@ -11,7 +11,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     private final String[] EXCLUDE_PATH = {
             "/error", "/api-test", "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**",
-            "/user", "/user/login", "/user/logout",
+            "/user", "/user/login", "/user/logout", "/user/**",
             "/auth/nickname-duplication", "/auth/email-duplication", "/auth/email-code", "/auth/email",
             "/apt", "/apt/**",
             "/notice/**",

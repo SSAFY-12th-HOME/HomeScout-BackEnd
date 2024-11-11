@@ -29,4 +29,16 @@
         select * from user where user_id = #{userId}
     </select>
 
+    <update id="updatePassword">
+        update user
+        set password=#{encodedPassword}
+        where user.user_id=#{userId}
+    </update>
+
+    <update id="updateProfile">
+        update user
+        set nickname=#{nickname}, phone=#{phone}
+        where user.user_id=#{userId}
+    </update>
+
 </mapper>

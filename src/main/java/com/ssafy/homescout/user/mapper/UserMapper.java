@@ -1,8 +1,8 @@
 package com.ssafy.homescout.user.mapper;
 
 import com.ssafy.homescout.entity.User;
-import com.ssafy.homescout.user.dto.LoginRequestDto;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface UserMapper {
@@ -15,4 +15,8 @@ public interface UserMapper {
     boolean existsByNickname(String nickname);
 
     User findUserByUserId(Long userId);
+
+    void updatePassword(@Param("userId") Long userId, @Param("encodedPassword") String encodedPassword);
+
+    void updateProfile(@Param("userId") Long userId, @Param("nickname") String nickname, @Param("phone") String phone);
 }

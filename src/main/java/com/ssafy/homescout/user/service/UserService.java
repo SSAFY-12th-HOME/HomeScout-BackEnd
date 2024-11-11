@@ -1,10 +1,7 @@
 package com.ssafy.homescout.user.service;
 
-import com.ssafy.homescout.auth.service.AuthService;
 import com.ssafy.homescout.entity.User;
-import com.ssafy.homescout.user.dto.SignupRequestDto;
-import com.ssafy.homescout.user.dto.LoginRequestDto;
-import com.ssafy.homescout.user.dto.UserInfoResponseDto;
+import com.ssafy.homescout.user.dto.*;
 import com.ssafy.homescout.user.mapper.UserMapper;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -87,5 +84,33 @@ public class UserService {
                 .build();
 
         return userInfoResponseDto;
+    }
+
+    public MyPageResponseDto getMyPage() {
+        User user = userMapper.findUserByUserId(1L); // TODO userId 수정
+        return MyPageResponseDto.of(user);
+    }
+
+    public void editUser(EditUserRequestDto editUserRequestDto) {
+        Long userId = 1L; // TODO userId 수정
+
+        // 입력: 비밀번호 O / 비밀번호 확인 X
+        if(!editUserRequestDto.getPassword().isEmpty() && editUserRequestDto.getPasswordConfirm().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호 확인을 입력해주세요.");
+        }
+        // 입력: 비밀번호 X / 비밀번호 확인 O
+        if(editUserRequestDto.getPassword().isEmpty() && !editUserRequestDto.getPasswordConfirm().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "변경할 비밀번호를 입력해주세요.");
+        }
+
+        // 입력: 비밀번호 O / 비밀번호 확인 O / 두 비밀번호 일치하면 -> 비밀번호 업데이트
+        if(!editUserRequestDto.getPassword().isEmpty() &&
+                editUserRequestDto.getPassword().equals(editUserRequestDto.getPasswordConfirm())) {
+            userMapper.updatePassword(userId, passwordEncoder.encode(editUserRequestDto.getPassword()));
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "두 비밀번호가 일치하지 않습니다.");
+        }
+
+        userMapper.updateProfile(userId, editUserRequestDto.getNickname(), editUserRequestDto.getPhone());
     }
 }
