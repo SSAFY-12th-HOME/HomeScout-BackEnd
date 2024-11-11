@@ -121,4 +121,12 @@ public class AptService {
 
         return aptMapper.selectLifeStoryById(lifeStory.getLifeStoryId());
     }
+
+    public AptPosResponseDto findAptByAptNm(String aptNm) {
+        List<AptPosResponseDto> aptPosResponseDtoList = aptMapper.selectAptPosByAptNm(aptNm);
+        if(aptPosResponseDtoList.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "일치하는 아파트 정보가 없습니다.");
+        }
+        return aptPosResponseDtoList.get(0);
+    }
 }

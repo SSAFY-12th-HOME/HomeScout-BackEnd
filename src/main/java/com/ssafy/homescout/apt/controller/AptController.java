@@ -36,4 +36,10 @@ public class AptController {
         return ResponseEntity.ok(aptService.writeLifeStory(aptId, lifeStoryRequestDto));
     }
 
+    // 아파트 이름으로 검색
+    @GetMapping("/name/{aptNm}")
+    public ResponseEntity<?> getAptByAptNm(@PathVariable("aptNm") String aptNm) {
+        return ResponseEntity.ok(aptService.findAptByAptNm(aptNm));
+    }
+
 }

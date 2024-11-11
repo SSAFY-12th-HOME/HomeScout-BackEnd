@@ -111,4 +111,8 @@
     <select id="selectLifeStoryById">
         select * from life_story where life_story_id=#{lifeStoryId}
     </select>
+
+    <select id="selectAptPosByAptNm">
+        select apt_id, latitude, longitude from apt where apt_nm like CONCAT('%', #{aptNm}, '%')
+    </select>
 </mapper>

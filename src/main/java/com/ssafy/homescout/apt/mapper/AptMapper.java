@@ -30,4 +30,6 @@ public interface AptMapper {
     void insertLifeStory(LifeStory lifeStory);
 
     LifeStoryResponseDto selectLifeStoryById(Long lifeStoryId);
+
+    List<AptPosResponseDto> selectAptPosByAptNm(String aptNm);
 }
