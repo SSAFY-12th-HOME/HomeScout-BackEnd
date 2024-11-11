@@ -41,4 +41,8 @@
         where user.user_id=#{userId}
     </update>
 
+    <select id="findUserByEmailAndPhone">
+        select * from user where email=#{email} and phone=#{phone}
+    </select>
+
 </mapper>

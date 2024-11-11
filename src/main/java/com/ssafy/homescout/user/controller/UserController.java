@@ -1,9 +1,6 @@
 package com.ssafy.homescout.user.controller;
 
-import com.ssafy.homescout.user.dto.EditUserRequestDto;
-import com.ssafy.homescout.user.dto.SignupRequestDto;
-import com.ssafy.homescout.user.dto.LoginRequestDto;
-import com.ssafy.homescout.user.dto.UserInfoResponseDto;
+import com.ssafy.homescout.user.dto.*;
 import com.ssafy.homescout.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -70,6 +67,13 @@ public class UserController {
     @PutMapping
     public ResponseEntity<?> editUser(@Valid @RequestBody EditUserRequestDto editUserRequestDto) {
         userService.editUser(editUserRequestDto);
+        return ResponseEntity.ok().build();
+    }
+
+    // 비밀번호 찾기 (임시 비밀번호 전송)
+    @PutMapping("/password")
+    public ResponseEntity<?> findPassword(@Valid @RequestBody FindPasswordRequestDto findPasswordRequestDto) {
+        userService.findPassword(findPasswordRequestDto);
         return ResponseEntity.ok().build();
     }
 

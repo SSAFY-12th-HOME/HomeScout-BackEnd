@@ -19,4 +19,6 @@ public interface UserMapper {
     void updatePassword(@Param("userId") Long userId, @Param("encodedPassword") String encodedPassword);
 
     void updateProfile(@Param("userId") Long userId, @Param("nickname") String nickname, @Param("phone") String phone);
+
+    User findUserByEmailAndPhone(@Param("email") String email, @Param("phone") String phone);
 }
