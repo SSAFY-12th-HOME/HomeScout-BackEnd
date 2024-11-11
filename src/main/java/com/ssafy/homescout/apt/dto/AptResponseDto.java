@@ -12,11 +12,23 @@ import java.util.List;
 public class AptResponseDto {
 
     private String aptId;
-    private Boolean isWish;
     private AptInfo aptInfo;
     private List<AptSaleInfo> sale;
     private List<AptDealInfo> dealHistory;
     private List<AptSubwayInfo> subway;
     private List<AptLifeStory> lifeStory;
+
+    public static AptResponseDto of(String aptId, AptInfo aptInfo, List<AptSaleInfo> sale,
+                                    List<AptDealInfo> dealHistory, List<AptSubwayInfo> subway,
+                                    List<AptLifeStory> lifeStory) {
+        return AptResponseDto.builder()
+                .aptId(aptId)
+                .aptInfo(aptInfo)
+                .sale(sale)
+                .dealHistory(dealHistory)
+                .subway(subway)
+                .lifeStory(lifeStory)
+                .build();
+    }
 
 }

@@ -115,4 +115,16 @@
     <select id="selectAptPosByAptNm">
         select apt_id, latitude, longitude from apt where apt_nm like CONCAT('%', #{aptNm}, '%')
     </select>
+
+    <select id="getSido">
+        select dong_cd 'sido_code', sido_nm 'sido_name' from dongcode where dong_cd like concat('%', '00000000')
+    </select>
+
+    <select id="getGu">
+        select dong_cd 'gu_code', sgg_nm 'gu_name' from dongcode where dong_cd like concat(#{sidoCode}, '%', '00000') and length(sgg_nm) != 0
+    </select>
+
+    <select id="getDong">
+        select dong_cd 'dong_code', dong_nm 'dong_name' from dongcode where dong_cd like concat(#{guCode}, '%') and length(dong_nm) != 0
+    </select>
 </mapper>

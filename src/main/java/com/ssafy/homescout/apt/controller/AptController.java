@@ -42,4 +42,22 @@ public class AptController {
         return ResponseEntity.ok(aptService.findAptByAptNm(aptNm));
     }
 
+    // 시도 데이터 조회
+    @GetMapping("/region/sido")
+    public ResponseEntity<?> getSido() {
+        return ResponseEntity.ok(aptService.getSido());
+    }
+
+    // 시군구 데이터 조회
+    @GetMapping("/region/gu")
+    public ResponseEntity<?> getGu(@RequestParam("sido") String sidoCode) {
+        return ResponseEntity.ok(aptService.getGu(sidoCode));
+    }
+
+    // 읍면동 데이터 조회
+    @GetMapping("/region/dong")
+    public ResponseEntity<?> getDong(@RequestParam("gu") String guCode) {
+        return ResponseEntity.ok(aptService.getDong(guCode));
+    }
+
 }

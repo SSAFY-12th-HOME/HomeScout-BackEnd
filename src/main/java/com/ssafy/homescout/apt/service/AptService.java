@@ -93,18 +93,7 @@ public class AptService {
         // 작성날짜 형식 변경
         aptLifeStoryList.forEach(o -> o.setCreated(ChronoUtil.timesAgo(o.getCreatedAt())));
 
-
-        // TODO isWish 처리
-        AptResponseDto aptResponseDto = AptResponseDto.builder()
-                .aptId(aptId)
-                .aptInfo(aptInfo)
-                .sale(aptSaleInfo)
-                .dealHistory(aptDealInfoList)
-                .subway(aptSubwayInfoList)
-                .lifeStory(aptLifeStoryList)
-                .build();
-
-        return aptResponseDto;
+        return AptResponseDto.of(aptId, aptInfo, aptSaleInfo, aptDealInfoList, aptSubwayInfoList, aptLifeStoryList);
     }
 
     public LifeStoryResponseDto writeLifeStory(String aptId, LifeStoryRequestDto lifeStoryRequestDto) {
@@ -128,5 +117,17 @@ public class AptService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "일치하는 아파트 정보가 없습니다.");
         }
         return aptPosResponseDtoList.get(0);
+    }
+
+    public List<SidoResponseDto> getSido() {
+        return aptMapper.getSido();
+    }
+
+    public List<GuResponseDto> getGu(String sidoCode) {
+        return aptMapper.getGu(sidoCode.substring(0, 2));
+    }
+
+    public List<DongResponseDto> getDong(String guCode) {
+        return aptMapper.getDong(guCode.substring(0, 5));
     }
 }

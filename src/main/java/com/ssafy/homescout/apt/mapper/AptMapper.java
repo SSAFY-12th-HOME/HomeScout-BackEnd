@@ -1,9 +1,6 @@
 package com.ssafy.homescout.apt.mapper;
 
-import com.ssafy.homescout.apt.dto.AptLifeStory;
-import com.ssafy.homescout.apt.dto.AptPosResponseDto;
-import com.ssafy.homescout.apt.dto.AptSaleInfo;
-import com.ssafy.homescout.apt.dto.LifeStoryResponseDto;
+import com.ssafy.homescout.apt.dto.*;
 import com.ssafy.homescout.entity.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -32,4 +29,10 @@ public interface AptMapper {
     LifeStoryResponseDto selectLifeStoryById(Long lifeStoryId);
 
     List<AptPosResponseDto> selectAptPosByAptNm(String aptNm);
+
+    List<SidoResponseDto> getSido();
+
+    List<GuResponseDto> getGu(String sidoCode);
+
+    List<DongResponseDto> getDong(String guCode);
 }
