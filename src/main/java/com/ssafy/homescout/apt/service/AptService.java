@@ -1,5 +1,6 @@
 package com.ssafy.homescout.apt.service;
 
+import com.ssafy.homescout.api.service.WebClientService;
 import com.ssafy.homescout.apt.dto.*;
 import com.ssafy.homescout.apt.mapper.AptMapper;
 import com.ssafy.homescout.entity.*;
@@ -12,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -19,6 +21,7 @@ import java.util.List;
 public class AptService {
 
     private final AptMapper aptMapper;
+    private final WebClientService webClientService;
 
     public List<AptPosResponseDto> getAptAll() {
         return aptMapper.selectAllAptPos();
@@ -129,5 +132,26 @@ public class AptService {
 
     public List<DongResponseDto> getDong(String guCode) {
         return aptMapper.getDong(guCode.substring(0, 5));
+    }
+
+    public Object getPosByDongCode(String dongCode) {
+        // 동코드로 주소 가져오기 (ex. 서울특별시 서초구 잠원동)
+        Dongcode dongCodeEntity = aptMapper.selectDongcodeByDongCd(dongCode);
+        String address = dongCodeEntity.getSidoNm() + " " + dongCodeEntity.getSggNm() + " " + dongCodeEntity.getDongNm();
+
+        // 카카오 API 요청
+        Map<String, Object> response = webClientService.getPosByAddress(address);
+
+        // 메타데이터: 데이터 반환 개수가 0개면 오류
+        Map<String, Object> meta = (Map<String, Object>) response.get("meta");
+        if((Integer) meta.get("total_count") == 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "일치하는 행정동 좌표가 없습니다.");
+        }
+
+        // 첫 번째 주소 데이터 가져오기
+        Map<String, Object> documents = ((List<Map<String, Object>>) response.get("documents")).get(0);
+
+        // 위도, 경도 데이터 뽑아서 DTO로 변환
+        return RegionPosResponseDto.of((String) documents.get("y"), (String) documents.get("x"));
     }
 }

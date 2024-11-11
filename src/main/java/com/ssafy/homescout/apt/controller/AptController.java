@@ -60,4 +60,10 @@ public class AptController {
         return ResponseEntity.ok(aptService.getDong(guCode));
     }
 
+    // 지역으로 검색
+    @GetMapping("/region/{dongCode}")
+    public ResponseEntity<?> getPosByDongCode(@PathVariable("dongCode") String dongCode) {
+        return ResponseEntity.ok(aptService.getPosByDongCode(dongCode));
+    }
+
 }
