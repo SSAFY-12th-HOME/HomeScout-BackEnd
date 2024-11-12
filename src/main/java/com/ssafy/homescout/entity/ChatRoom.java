@@ -1,12 +1,13 @@
 package com.ssafy.homescout.entity;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
-@Builder
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ChatRoom {
 
     private Long chatRoomId;
