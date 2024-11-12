@@ -5,7 +5,7 @@
 <mapper namespace="com.ssafy.homescout.chat.mapper.ChatRoomMapper">
 
 
-    <select id="getChatRoom" parameterType="map" resultMap="ChatRoomResultMap">
+    <select id="getChatRoom" parameterType="map">
         SELECT * FROM chat_room
         WHERE (user1_id = #{user1Id} AND user2_id = #{user2Id})
            OR (user1_id = #{user2Id} AND user2_id = #{user1Id})

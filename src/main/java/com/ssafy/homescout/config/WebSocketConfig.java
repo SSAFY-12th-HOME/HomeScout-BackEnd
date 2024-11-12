@@ -34,5 +34,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         //클라이언트는 이 prefix(어디로 가야하는지 구분하는 역할을 함 컨트롤러로 갈지, 메시지 브로커로 갈지)가 붙은 경로로 메시지를 보낸다.
         //서버 측에서는 이 경로에 매핑된 컨트롤러 메서드가 메시지를 처리한다.
         config.setApplicationDestinationPrefixes("/app"); // 애플리케이션 경로 설정
+
+        // 사용자 대상 메시지 전송을 위한 prefix 설정
+        config.setUserDestinationPrefix("/user");
     }
 }
