@@ -16,4 +16,58 @@
         VALUES(#{user1Id}, #{user2Id}, NOW(), NOW())
     </insert>
 
+    <!--
+
+     특정 사용자가 참여한 모든 채팅방과 상대방 정보 및 최신 메시지 조회
+     CASE 문을 사용하여 상대방 유저를 식별 (user1_id가 요청된 userId인 경우 user2_id를, 그렇지 않으면 user1_id를 otherUserId로 설정).
+     JOIN을 통해 상대방 유저의 nickname과 profile_img를 가져옴.
+     LEFT JOIN 을 통해 각 채팅방의 최신 메시지를 가져옴.
+     ORDER BY m.created_at DESC 를 사용하여 최신 메시지 기준으로 정렬
+
+     -->
+    <!-- 특정 사용자가 참여한 모든 채팅방과 상대방 정보 및 최신 메시지 조회 -->
+    <select id="getChatRoomDetailsByUserId" parameterType="long">
+        SELECT
+            cr.chat_room_id AS chatRoomId,
+            CASE
+                WHEN cr.user1_id = #{userId} THEN cr.user2_id
+                ELSE cr.user1_id
+                END AS otherUserId,
+            u.nickname AS otherUserNickname,
+            u.profile_img AS otherUserProfileImg,
+            m.created_at AS lastMessageDate,
+            m.content AS lastMessageContent
+        FROM
+            chat_room cr
+                JOIN
+            user u ON (CASE WHEN cr.user1_id = #{userId} THEN cr.user2_id ELSE cr.user1_id END) = u.user_id
+                LEFT JOIN
+            (
+                SELECT
+                    m1.chat_room_id,
+                    m1.content,
+                    m1.created_at
+                FROM
+                    message m1
+                        INNER JOIN
+                    (
+                        SELECT
+                            chat_room_id,
+                            MAX(created_at) AS latest_time
+                        FROM
+                            message
+                        GROUP BY
+                            chat_room_id
+                    ) m2
+                    ON
+                        m1.chat_room_id = m2.chat_room_id AND
+                        m1.created_at = m2.latest_time
+            ) m
+            ON
+                m.chat_room_id = cr.chat_room_id
+        WHERE
+            cr.user1_id = #{userId} OR cr.user2_id = #{userId}
+        ORDER BY
+            m.created_at DESC
+    </select>
 </mapper>

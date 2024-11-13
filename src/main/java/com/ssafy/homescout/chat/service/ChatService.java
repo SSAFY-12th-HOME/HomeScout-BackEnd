@@ -1,9 +1,6 @@
 package com.ssafy.homescout.chat.service;
 
-import com.ssafy.homescout.chat.dto.AddUserRequestDto;
-import com.ssafy.homescout.chat.dto.AddUserResponseDto;
-import com.ssafy.homescout.chat.dto.SendMessageRequestDto;
-import com.ssafy.homescout.chat.dto.SendMessageResponseDto;
+import com.ssafy.homescout.chat.dto.*;
 import com.ssafy.homescout.chat.mapper.ChatRoomMapper;
 import com.ssafy.homescout.chat.mapper.MessageMapper;
 import com.ssafy.homescout.entity.ChatRoom;
@@ -11,10 +8,14 @@ import com.ssafy.homescout.entity.Message;
 import com.ssafy.homescout.entity.User;
 import com.ssafy.homescout.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -97,6 +98,22 @@ public class ChatService {
     //해당 특정방의 모든 메시지를 조회
     public List<Message> getMessagesByChatRoomId(Long chatRoomId) {
         return messageMapper.getMessagesByChatRoomId(chatRoomId);
+    }
+
+    // userId에 해당하는 사용자가 참여한 모든 채팅방의 상세 정보를 조회
+    public ChatRoomListResponseDto getChatRoomsByUserId(Long userId) {
+        // 사용자 존재 여부 확인
+        User user = userMapper.findUserByUserId(userId);
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 유저입니다.");
+        }
+
+        //ChatRoomDetailResponseDto 목록을 생성하여 ChatRoomListResponseDto로 반환
+        List<ChatRoomDetailResponseDto> chatRoomDetails = chatRoomMapper.getChatRoomDetailsByUserId(userId);
+        return ChatRoomListResponseDto.builder()
+                .userId(userId)
+                .chatRooms(chatRoomDetails)
+                .build();
     }
 
 }
