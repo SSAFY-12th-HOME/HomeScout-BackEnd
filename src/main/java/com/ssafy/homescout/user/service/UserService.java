@@ -172,4 +172,8 @@ public class UserService {
 
         javaMailSender.send(message);
     }
+
+    public void updateProfileImg(Long userId, String imgUrl) {
+        userMapper.updateProfileImg(userId, imgUrl);
+    }
 }

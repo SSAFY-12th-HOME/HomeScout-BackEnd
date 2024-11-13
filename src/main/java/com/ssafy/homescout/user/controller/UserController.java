@@ -2,6 +2,7 @@ package com.ssafy.homescout.user.controller;
 
 import com.ssafy.homescout.annotation.Auth;
 import com.ssafy.homescout.user.dto.*;
+import com.ssafy.homescout.user.service.S3Service;
 import com.ssafy.homescout.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/user")
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final S3Service s3Service;
 
     @PostMapping
     public ResponseEntity<?> signUp(@Valid @RequestBody SignupRequestDto signupRequestDto) {
@@ -60,6 +63,15 @@ public class UserController {
     @PutMapping("/password")
     public ResponseEntity<?> findPassword(@Valid @RequestBody FindPasswordRequestDto findPasswordRequestDto) {
         userService.findPassword(findPasswordRequestDto);
+        return ResponseEntity.ok().build();
+    }
+
+    // 프로필 이미지 업로드
+    @PostMapping("/image")
+    public ResponseEntity<?> uploadFile(@Auth Long userId,
+                             @RequestParam("file") MultipartFile file) {
+        String imgUrl = s3Service.uploadImage(file);
+        userService.updateProfileImg(userId, imgUrl);
         return ResponseEntity.ok().build();
     }
 

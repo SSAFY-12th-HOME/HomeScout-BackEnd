@@ -49,4 +49,8 @@
         update user set exp=#{exp} where user_id=#{userId}
     </update>
 
+    <update id="updateProfileImg">
+        update user set profile_img=#{imgUrl} where user_id=#{userId}
+    </update>
+
 </mapper>

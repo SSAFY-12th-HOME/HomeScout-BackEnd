@@ -23,4 +23,6 @@ public interface UserMapper {
     User findUserByEmailAndPhone(@Param("email") String email, @Param("phone") String phone);
 
     void updateUserExp(@Param("userId") Long userId, @Param("exp") Integer exp);
+
+    void updateProfileImg(@Param("userId") Long userId, @Param("imgUrl") String imgUrl);
 }
