@@ -45,4 +45,8 @@
         select * from user where email=#{email} and phone=#{phone}
     </select>
 
+    <update id="updateUserExp">
+        update user set exp=#{exp} where user_id=#{userId}
+    </update>
+
 </mapper>

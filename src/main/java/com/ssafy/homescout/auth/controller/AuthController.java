@@ -1,5 +1,6 @@
 package com.ssafy.homescout.auth.controller;
 
+import com.ssafy.homescout.annotation.Auth;
 import com.ssafy.homescout.auth.dto.EmailCodeRequestDto;
 import com.ssafy.homescout.auth.dto.PasswordRequestDto;
 import com.ssafy.homescout.auth.service.AuthService;
@@ -50,9 +51,10 @@ public class AuthController {
     }
 
     @PostMapping("/password")
-    public ResponseEntity<?> checkPassword(@Valid
+    public ResponseEntity<?> checkPassword(@Auth Long userId,
+                                           @Valid
                                            @RequestBody PasswordRequestDto passwordRequestDto) {
-        authService.checkPassword(passwordRequestDto);
+        authService.checkPassword(userId, passwordRequestDto);
         return ResponseEntity.ok().build();
     }
 }

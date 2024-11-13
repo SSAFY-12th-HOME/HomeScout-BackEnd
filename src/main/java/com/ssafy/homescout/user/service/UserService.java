@@ -3,10 +3,10 @@ package com.ssafy.homescout.user.service;
 import com.ssafy.homescout.entity.User;
 import com.ssafy.homescout.user.dto.*;
 import com.ssafy.homescout.user.mapper.UserMapper;
+import com.ssafy.homescout.util.JwtUtil;
 import com.ssafy.homescout.util.NumberUtil;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -23,6 +23,7 @@ public class UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final JavaMailSender javaMailSender;
+    private final JwtUtil jwtUtil;
 
     public void signUp(SignupRequestDto signupRequestDto) {
         // 이메일 중복 검사
@@ -61,7 +62,7 @@ public class UserService {
         userMapper.save(user);
     }
 
-    public void login(LoginRequestDto loginRequestDto, HttpSession session) {
+    public TokenResponseDto login(LoginRequestDto loginRequestDto) {
 
         User user = userMapper.findUserByEmail(loginRequestDto.getEmail());
 
@@ -70,16 +71,18 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이메일 또는 비밀번호가 잘못되었습니다.");
         }
 
-        //로그인 성공 후 session에 email 저장
-        session.setAttribute("loginUser", user.getEmail());
+        String token = jwtUtil.createToken(user.getUserId());
+//        System.out.println(token);
+//        System.out.println(jwtUtil.validateToken(token));
+//        System.out.println(jwtUtil.getUserId(token));
 
+        return TokenResponseDto.of(token);
     }
 
-    public UserInfoResponseDto getUserInfo() {
+    public UserInfoResponseDto getUserInfo(Long userId) {
 
 //        String email = (String) session.getAttribute("loginUser");
-        Long userId = 1L; // TODO uesrId 수정
-
+        System.out.println(userId);
 //        User findUser =  userMapper.findUserByEmail("ssafy2@naver.com");
         User user = userMapper.findUserByUserId(userId);
 
@@ -93,15 +96,12 @@ public class UserService {
         return UserInfoResponseDto.of(user);
     }
 
-    public MyPageResponseDto getMyPage() {
-        Long userId = 1L; // TODO userId 수정
+    public MyPageResponseDto getMyPage(Long userId) {
         User user = userMapper.findUserByUserId(userId);
         return MyPageResponseDto.of(user);
     }
 
-    public void editUser(EditUserRequestDto editUserRequestDto) {
-        Long userId = 1L; // TODO userId 수정
-
+    public void editUser(Long userId, EditUserRequestDto editUserRequestDto) {
         // 입력: 비밀번호 O / 비밀번호 확인 X
         if(!editUserRequestDto.getPassword().isEmpty() && editUserRequestDto.getPasswordConfirm().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호 확인을 입력해주세요.");

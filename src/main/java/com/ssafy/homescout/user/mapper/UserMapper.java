@@ -21,4 +21,6 @@ public interface UserMapper {
     void updateProfile(@Param("userId") Long userId, @Param("nickname") String nickname, @Param("phone") String phone);
 
     User findUserByEmailAndPhone(@Param("email") String email, @Param("phone") String phone);
+
+    void updateUserExp(@Param("userId") Long userId, @Param("exp") Integer exp);
 }

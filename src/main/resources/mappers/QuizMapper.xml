@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.homescout.quiz.mapper.QuizMapper">
+
+    <insert id="insertQuiz" useGeneratedKeys="true" keyProperty="quizId">
+        insert into quiz (user_id, title, `desc`, exp, solved_count, type)
+        values (#{userId}, #{title}, #{desc}, #{exp}, #{solvedCount}, #{type})
+    </insert>
+
+    <insert id="insertQuizQuestion" useGeneratedKeys="true" keyProperty="quizQuestionId">
+        insert into quiz_question (quiz_id, question)
+        values (#{quizId}, #{question})
+    </insert>
+
+    <insert id="insertQuizOption" useGeneratedKeys="true" keyProperty="quizOptionId">
+        insert into quiz_option (quiz_question_id, `option`, is_answer)
+        values (#{quizQuestionId}, #{option}, #{isAnswer})
+    </insert>
+
+    <select id="selectQuizById">
+        select quiz_id, user_id, title, `desc`, exp, solved_count, type
+        from quiz
+        where quiz_id=#{quizId}
+    </select>
+
+    <select id="selectQuizQuestionByQuizId">
+        select quiz_question_id, quiz_id, question
+        from quiz_question
+        where quiz_id=#{quizId}
+    </select>
+
+    <select id="selectQuizOptionByQuestionId">
+        select quiz_option_id, quiz_question_id, `option`, is_answer
+        from quiz_option
+        where quiz_question_id=#{quizQuestionId}
+    </select>
+
+    <resultMap id="QuizUser" type="com.ssafy.homescout.entity.QuizUser">
+        <id property="quizId" column="quiz_id"/>
+        <result property="title" column="title"/>
+        <result property="desc" column="desc"/>
+        <result property="exp" column="exp"/>
+        <result property="solvedCount" column="solved_count"/>
+        <result property="type" column="type"/>
+        <!-- Writer(User) 정보를 중첩 객체로 매핑 -->
+        <association property="user" javaType="com.ssafy.homescout.entity.User">
+            <id property="userId" column="user_id"/>
+            <result property="email" column="email"/>
+            <result property="password" column="password"/>
+            <result property="nickname" column="nickname"/>
+            <result property="profileImg" column="profileImg"/>
+            <result property="phone" column="phone"/>
+            <result property="role" column="role"/>
+            <result property="exp" column="exp"/>
+        </association>
+    </resultMap>
+
+    <select id="selectAllQuiz" resultMap="QuizUser">
+        select q.*, u.*
+        from quiz q inner join user u
+        on q.user_id = u.user_id
+        order by
+        <if test="order == 'latest'">q.quiz_id</if>
+        <if test="order == 'participation'">q.solved_count desc</if>
+    </select>
+
+    <delete id="deleteQuiz">
+        delete from quiz
+        where quiz_id=#{quizId}
+    </delete>
+
+    <select id="existSolve" resultType="boolean">
+        select exists(
+            select 1 from user_quiz_solve where quiz_id=#{quizId}
+        )
+    </select>
+
+    <select id="existSolveByUserId" resultType="boolean">
+        select exists(
+            select 1 from user_quiz_solve where quiz_id=#{quizId} and user_id=#{userId}
+        )
+    </select>
+
+    <select id="selectAnswerByQuizId">
+        select q.quiz_question_id, o.option
+        from quiz_question q inner join quiz_option o
+        on q.quiz_question_id = o.quiz_question_id
+        where quiz_id=#{quizId} and is_answer
+    </select>
+
+    <insert id="insertUserQuizSolve">
+        insert into user_quiz_solve
+        values (#{userId}, #{quizId})
+    </insert>
+
+</mapper>

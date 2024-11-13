@@ -22,9 +22,7 @@ public class SaleService {
 
     private final SaleMapper saleMapper;
 
-    public Sale registerSale(SaleRequestDto saleRequestDto) {
-        Long userId = 1L;// TODO userId 수정
-
+    public Sale registerSale(Long userId, SaleRequestDto saleRequestDto) {
         Sale sale = Sale.builder()
                 .aptId(saleRequestDto.getAptId())
                 .userId(userId)
@@ -45,15 +43,11 @@ public class SaleService {
         return sale;
     }
 
-    public List<SaleResponseDto> getMySaleList() {
-        Long userId = 1L; // TODO userId 수정
-
+    public List<SaleResponseDto> getMySaleList(Long userId) {
         return saleMapper.selectSalesByUserId(userId);
     }
 
-    public Sale editSale(Long saleId, SaleEditRequestDto saleEditRequestDto) {
-        Long userId = 1L; // TODO userId 수정
-
+    public Sale editSale(Long saleId, Long userId, SaleEditRequestDto saleEditRequestDto) {
         Sale sale = saleMapper.selectSaleBySaleId(saleId);
         if(sale == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 매물입니다.");
@@ -77,9 +71,7 @@ public class SaleService {
         return sale;
     }
 
-    public void removeSale(Long saleId) {
-        Long userId = 1L; // TODO userId 수정
-
+    public void removeSale(Long saleId, Long userId) {
         Sale sale = saleMapper.selectSaleBySaleId(saleId);
         if(sale == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 매물입니다.");
@@ -91,10 +83,12 @@ public class SaleService {
         saleMapper.deleteSale(saleId);
     }
 
-    public void registerWishSale(Long saleId) {
-        Long userId = 1L; // TODO userId 수정
-
-        saleMapper.insertWishSale(saleId, userId);
+    public void registerWishSale(Long saleId, Long userId) {
+        try {
+            saleMapper.insertWishSale(saleId, userId);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 매물입니다.");
+        }
     }
 
     public void removeWishSale(Long saleId, Long wishSaleId) {

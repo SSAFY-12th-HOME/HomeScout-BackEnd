@@ -1,5 +1,6 @@
 package com.ssafy.homescout.apt.controller;
 
+import com.ssafy.homescout.annotation.Auth;
 import com.ssafy.homescout.apt.dto.LifeStoryRequestDto;
 import com.ssafy.homescout.apt.service.AptService;
 import jakarta.validation.Valid;
@@ -31,9 +32,10 @@ public class AptController {
     // 살아본 이야기 등록
     @PostMapping("/{aptId}/story")
     public ResponseEntity<?> writeLifeStory(@PathVariable("aptId") String aptId,
+                                            @Auth Long userId,
                                             @Valid
                                             @RequestBody LifeStoryRequestDto lifeStoryRequestDto) {
-        return ResponseEntity.ok(aptService.writeLifeStory(aptId, lifeStoryRequestDto));
+        return ResponseEntity.ok(aptService.writeLifeStory(aptId, userId, lifeStoryRequestDto));
     }
 
     // 아파트 이름으로 검색

@@ -1,15 +1,14 @@
 package com.ssafy.homescout.sale.controller;
 
+import com.ssafy.homescout.annotation.Auth;
 import com.ssafy.homescout.sale.dto.SaleEditRequestDto;
 import com.ssafy.homescout.sale.dto.SaleRequestDto;
 import com.ssafy.homescout.sale.service.SaleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/sale")
@@ -21,28 +20,30 @@ public class SaleController {
 
     // 내가 등록한 매물 리스트 조회
     @GetMapping
-    public ResponseEntity<?> getMySaleList() {
-        return ResponseEntity.ok(saleService.getMySaleList());
+    public ResponseEntity<?> getMySaleList(@Auth Long userId) {
+        return ResponseEntity.ok(saleService.getMySaleList(userId));
     }
 
     // 매물 등록
     @PostMapping
-    public ResponseEntity<?> registerSale(
-            @Valid @RequestBody SaleRequestDto saleRequestDto) {
-        return ResponseEntity.ok(saleService.registerSale(saleRequestDto));
+    public ResponseEntity<?> registerSale(@Auth Long userId,
+                                          @Valid @RequestBody SaleRequestDto saleRequestDto) {
+        return ResponseEntity.ok(saleService.registerSale(userId, saleRequestDto));
     }
 
     // 매물 수정
     @PutMapping("/{saleId}")
     public ResponseEntity<?> editSale(@PathVariable("saleId") Long saleId,
+                                      @Auth Long userId,
                                       @RequestBody SaleEditRequestDto saleEditRequestDto) {
-        return ResponseEntity.ok(saleService.editSale(saleId, saleEditRequestDto));
+        return ResponseEntity.ok(saleService.editSale(saleId, userId, saleEditRequestDto));
     }
 
     // 매물 삭제
     @DeleteMapping("/{saleId}")
-    public ResponseEntity<?> removeSale(@PathVariable("saleId") Long saleId) {
-        saleService.removeSale(saleId);
+    public ResponseEntity<?> removeSale(@PathVariable("saleId") Long saleId,
+                                        @Auth Long userId) {
+        saleService.removeSale(saleId, userId);
         return ResponseEntity.ok().build();
     }
 
@@ -54,12 +55,9 @@ public class SaleController {
 
     // 관심 매물 등록
     @PostMapping("/{saleId}/wish")
-    public ResponseEntity<?> registerWishSale(@PathVariable("saleId") Long saleId) {
-        try {
-            saleService.registerWishSale(saleId);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 매물입니다.");
-        }
+    public ResponseEntity<?> registerWishSale(@PathVariable("saleId") Long saleId,
+                                              @Auth Long userId) {
+        saleService.registerWishSale(saleId, userId);
         return ResponseEntity.ok().build();
     }
 

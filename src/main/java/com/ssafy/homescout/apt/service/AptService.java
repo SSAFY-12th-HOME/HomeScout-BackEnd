@@ -40,6 +40,7 @@ public class AptService {
         String aptAddress = dongcode.getSidoNm() + " " + dongcode.getSggNm() + " "
                 + apt.getRoadNm() + " " + apt.getRoadNmBonbun() + "-" + apt.getRoadNmBubun();
         // 아파트 정보 초기화
+        // TODO 용적률, 최고층, 세대수 등 API 받아오기
         AptInfo aptInfo = AptInfo.builder()
                 .aptNm(apt.getAptNm())
                 .address(aptAddress)
@@ -99,10 +100,7 @@ public class AptService {
         return AptResponseDto.of(aptId, aptInfo, aptSaleInfo, aptDealInfoList, aptSubwayInfoList, aptLifeStoryList);
     }
 
-    public LifeStoryResponseDto writeLifeStory(String aptId, LifeStoryRequestDto lifeStoryRequestDto) {
-        // TODO userId 현재 로그인한 유저로 수정하기
-        Long userId = 1L;
-
+    public LifeStoryResponseDto writeLifeStory(String aptId, Long userId, LifeStoryRequestDto lifeStoryRequestDto) {
         LifeStory lifeStory = LifeStory.builder()
                 .aptId(aptId)
                 .userId(userId)

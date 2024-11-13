@@ -103,10 +103,9 @@ public class AuthService {
         }
     }
 
-    public void checkPassword(PasswordRequestDto passwordRequestDto) {
+    public void checkPassword(Long userId, PasswordRequestDto passwordRequestDto) {
         String rawPassword = passwordRequestDto.getPassword();
-        // TODO userId 수정하기
-        String encodedPassword = userMapper.findUserByUserId(1L).getPassword();
+        String encodedPassword = userMapper.findUserByUserId(userId).getPassword();
 
         if(!passwordEncoder.matches(rawPassword, encodedPassword)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다.");
