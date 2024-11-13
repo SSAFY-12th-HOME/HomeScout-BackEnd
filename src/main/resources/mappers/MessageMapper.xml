@@ -4,16 +4,33 @@
 
 <mapper namespace="com.ssafy.homescout.chat.mapper.MessageMapper">
 
-    <select id="getMessagesByChatRoomId" parameterType="long">
-        SELECT * FROM message
-        WHERE chat_room_id = #{chatRoomId}
-        ORDER BY created_at ASC
-    </select>
 
 
     <insert id="insertMessage" parameterType="com.ssafy.homescout.entity.Message" useGeneratedKeys="true" keyProperty="messageId">
         INSERT INTO message(chat_room_id, user_id, content, message_type, created_at, file_url)
         VALUES(#{chatRoomId}, #{userId}, #{content}, #{messageType}, NOW(), #{fileUrl})
     </insert>
+
+    <!-- 특정 채팅방의 모든 메시지 조회 -->
+    <select id="getMessagesByChatRoomId" parameterType="long">
+        SELECT
+            m.message_id AS messageId,
+            m.chat_room_id AS chatRoomId,
+            m.user_id AS userId,
+            u.nickname AS nickname,
+            u.profile_img AS profileImg,
+            m.content,
+            m.message_type AS messageType,
+            m.created_at AS createdAt,
+            m.file_url AS fileUrl
+        FROM
+            message m
+                JOIN
+            user u ON m.user_id = u.user_id
+        WHERE
+            m.chat_room_id = #{chatRoomId}
+        ORDER BY
+            m.created_at ASC
+    </select>
 
 </mapper>

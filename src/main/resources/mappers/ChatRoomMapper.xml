@@ -70,4 +70,10 @@
         ORDER BY
             m.created_at DESC
     </select>
+
+
+    <!-- 채팅방 ID로 채팅방 조회 -->
+    <select id="getChatRoomById" parameterType="long">
+        SELECT * FROM chat_room WHERE chat_room_id = #{chatRoomId}
+    </select>
 </mapper>

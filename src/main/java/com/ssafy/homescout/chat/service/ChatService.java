@@ -95,9 +95,20 @@ public class ChatService {
         return responseDto;
     }
 
-    //해당 특정방의 모든 메시지를 조회
-    public List<Message> getMessagesByChatRoomId(Long chatRoomId) {
-        return messageMapper.getMessagesByChatRoomId(chatRoomId);
+    // 특정 채팅방의 모든 메시지 조회
+    public MessageListResponseDto getMessagesByChatRoomId(Long chatRoomId) {
+        // 채팅방 존재 여부 확인
+        ChatRoom chatRoom = chatRoomMapper.getChatRoomById(chatRoomId);
+        if (chatRoom == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "채팅방이 존재하지 않습니다.");
+        }
+
+        // 메시지 조회
+        List<MessageResponseDto> messages = messageMapper.getMessagesByChatRoomId(chatRoomId);
+        return MessageListResponseDto.builder()
+                .chatRoomId(chatRoomId)
+                .messages(messages)
+                .build();
     }
 
     // userId에 해당하는 사용자가 참여한 모든 채팅방의 상세 정보를 조회
