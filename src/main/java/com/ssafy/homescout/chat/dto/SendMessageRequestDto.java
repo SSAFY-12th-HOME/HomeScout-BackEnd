@@ -16,3 +16,6 @@ public class SendMessageRequestDto {
     private String content; //메시지 내용
     private String fileUrl; // 파일 URL (옵션)
 }
+
+
+//{"senderId": 1, "receiverId": 2, "content"="하이"}

@@ -14,7 +14,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/chat") //클라이언트가 WebSocket 연결을 시작하는 특정 URL 경로
-                .withSockJS(); //SockJS를 활성화하여 WebSocket 연결이 불가능한 환경에서도 클라이언트와 서버 간의 실시간 통신을 가능하게 함
+                .setAllowedOrigins("*"); // 모든 도메인 허용 (테스트용, 프로덕션에서는 특정 도메인만 허용 권장) CORS 설정
+                //.withSockJS(); //SockJS를 활성화하여 WebSocket 연결이 불가능한 환경에서도 클라이언트와 서버 간의 실시간 통신을 가능하게 함
     }
 
     //MessageBrokerRegistry : Spring의 WebSocket 설정에서 메시지 브로커를 구성하기 위한 API를 제공
@@ -35,7 +36,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         //서버 측에서는 이 경로에 매핑된 컨트롤러 메서드가 메시지를 처리한다.
         config.setApplicationDestinationPrefixes("/app"); // 애플리케이션 경로 설정
 
-        // 사용자 대상 메시지 전송을 위한 prefix 설정
-        config.setUserDestinationPrefix("/user");
+
     }
 }

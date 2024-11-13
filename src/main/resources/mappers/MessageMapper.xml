@@ -4,7 +4,7 @@
 
 <mapper namespace="com.ssafy.homescout.chat.mapper.MessageMapper">
 
-    <select id="getMessagesByChatRoomId" parameterType="long" resultMap="MessageResultMap">
+    <select id="getMessagesByChatRoomId" parameterType="long">
         SELECT * FROM message
         WHERE chat_room_id = #{chatRoomId}
         ORDER BY created_at ASC
