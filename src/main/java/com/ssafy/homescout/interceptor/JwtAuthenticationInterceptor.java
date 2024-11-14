@@ -1,5 +1,6 @@
 package com.ssafy.homescout.interceptor;
 
+import com.ssafy.homescout.user.service.UserService;
 import com.ssafy.homescout.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -30,6 +31,11 @@ public class JwtAuthenticationInterceptor implements HandlerInterceptor {
 
         String token = resolveToken(request);
         if (token != null && jwtUtil.validateToken(token)) {
+            // 로그아웃된 사용자는 접근 불가 처리
+            if(UserService.blackList.contains(token)) {
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "이미 로그아웃한 사용자입니다.");
+            }
+
             // Set authentication information in request
             request.setAttribute("userId", jwtUtil.getUserId(token));
             return true;

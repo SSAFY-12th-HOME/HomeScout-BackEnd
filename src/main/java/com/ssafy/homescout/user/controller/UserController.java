@@ -39,9 +39,10 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserInfo(userId));
     }
 
+    // 로그아웃
     @PostMapping("/logout")
-    public ResponseEntity<?> logout() {
-        // TODO 로그아웃 처리 (블랙리스트 만들기?)
+    public ResponseEntity<?> logout(@RequestHeader("Authorization") String token) {
+        userService.addTokenToBlackList(token);
         return ResponseEntity.ok().build();
     }
 

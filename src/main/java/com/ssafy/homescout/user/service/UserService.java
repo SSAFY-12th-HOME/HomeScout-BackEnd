@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.HashSet;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -24,6 +26,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JavaMailSender javaMailSender;
     private final JwtUtil jwtUtil;
+    public static final HashSet<String> blackList = new HashSet<>();
 
     public void signUp(SignupRequestDto signupRequestDto) {
         // 이메일 중복 검사
@@ -175,5 +178,9 @@ public class UserService {
 
     public void updateProfileImg(Long userId, String imgUrl) {
         userMapper.updateProfileImg(userId, imgUrl);
+    }
+
+    public void addTokenToBlackList(String token) {
+        blackList.add(token.substring(7));
     }
 }
