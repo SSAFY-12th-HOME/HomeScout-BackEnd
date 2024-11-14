@@ -44,12 +44,12 @@ public class AptService {
         AptInfo aptInfo = AptInfo.builder()
                 .aptNm(apt.getAptNm())
                 .address(aptAddress)
-                .homeCnt(0)
+                .homeCnt(0) // 세대수
                 .buildYear(apt.getBuildYear())
-                .maxFloor(20)
-                .far(220)
-                .bcr(15)
-                .dongCnt(12)
+                .maxFloor(20) // 최고층
+                .far(220) // 용적률
+                .bcr(15) // 건폐율
+                .dongCnt(12) // 동 개수
                 .latitude(apt.getLatitude())
                 .longitude(apt.getLongitude())
                 .build();
