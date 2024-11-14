@@ -5,6 +5,7 @@ import com.ssafy.homescout.apt.dto.*;
 import com.ssafy.homescout.apt.mapper.AptMapper;
 import com.ssafy.homescout.entity.*;
 import com.ssafy.homescout.util.ChronoUtil;
+import com.ssafy.homescout.util.NumberUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -55,8 +56,12 @@ public class AptService {
                 .build();
 
         // 매물 정보 불러오기
-        // TODO 매물 금액 어떻게 처리할지 정하기
         List<AptSaleInfo> aptSaleInfo = aptMapper.selectAptSalesByAptId(aptId);
+        aptSaleInfo.forEach(o -> {
+            o.setPrice(NumberUtil.convertPrice(o.getPrice()));
+            o.setDeposit(NumberUtil.convertPrice(o.getDeposit()));
+            o.setRentalFee(NumberUtil.convertPrice(o.getRentalFee()));
+        });
 
         // 거래 내역 불러오기 (최근 5개만 불러오게 해놈)
         List<AptDeal> aptDealList = aptMapper.selectAptDealsByAptId(aptId);
@@ -67,11 +72,10 @@ public class AptService {
                             aptDeal.getDealMonth(),
                             aptDeal.getDealDay());
 
-            // TODO 금액 단위 어떻게?
             aptDealInfoList.add(AptDealInfo.builder()
                     .dealDate(dealDate)
-                    .area(aptDeal.getArea())
-                    .price(aptDeal.getDealAmount())
+                    .area(aptDeal.getArea() + "㎡")
+                    .price(NumberUtil.convertPrice(aptDeal.getDealAmount().replace(",","")))
                     .build());
         }
 

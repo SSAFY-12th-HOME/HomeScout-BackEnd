@@ -11,9 +11,9 @@ public class AptSaleInfo {
 
     private Long saleId;
     private String type; // 매매 or 전/월세
-    private Integer price;
-    private Integer deposit;
-    private Integer rentalFee;
+    private String price;
+    private String deposit;
+    private String rentalFee;
     private Integer dong;
     private Integer floor;
     private String area;

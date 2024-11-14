@@ -34,4 +34,27 @@ public class NumberUtil {
         int code = 100000 + random.nextInt(900000);
         return String.valueOf(code);
     }
+
+    public static String convertPrice(String input) {
+        int price = Integer.parseInt(input);
+
+        // 억과 만 단위 계산
+        int eok = (price / 10000) % 10000; // 억 단위
+        int man = price % 10000; // 만 단위
+
+        StringBuilder result = new StringBuilder();
+
+        // 억 단위 처리
+        if (eok > 0) {
+            result.append(eok).append("억");
+        }
+
+        // 만 단위 처리
+        if (man > 0) {
+            if (!result.isEmpty()) result.append(" "); // 앞에 억이 있으면 공백 추가
+            result.append(man).append("만");
+        }
+
+        return result.toString();
+    }
 }
