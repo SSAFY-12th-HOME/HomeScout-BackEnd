@@ -1,5 +1,6 @@
 package com.ssafy.homescout.chat.controller;
 
+import com.ssafy.homescout.annotation.Auth;
 import com.ssafy.homescout.chat.dto.ChatRoomListResponseDto;
 import com.ssafy.homescout.chat.dto.MessageListResponseDto;
 import com.ssafy.homescout.chat.service.ChatService;
@@ -18,8 +19,8 @@ public class ChatRestController {
     private final ChatService chatService;
 
     //특정 사용자가 참여한 모든 채팅방 목록 조회
-    @GetMapping("/rooms/{userId}")
-    public ResponseEntity<ChatRoomListResponseDto> getChatRoomsByUserId(@PathVariable("userId") Long userId) {
+    @GetMapping("/rooms")
+    public ResponseEntity<ChatRoomListResponseDto> getChatRoomsByUserId(@Auth Long userId) {
         ChatRoomListResponseDto responseDto = chatService.getChatRoomsByUserId(userId);
         return ResponseEntity.ok(responseDto);
     }
