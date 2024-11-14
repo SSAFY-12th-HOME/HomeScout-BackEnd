@@ -79,7 +79,7 @@ public class UserService {
 //        System.out.println(jwtUtil.validateToken(token));
 //        System.out.println(jwtUtil.getUserId(token));
 
-        return TokenResponseDto.of(token);
+        return TokenResponseDto.of(token, user);
     }
 
     public UserInfoResponseDto getUserInfo(Long userId) {
