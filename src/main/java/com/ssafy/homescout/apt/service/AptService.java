@@ -35,6 +35,61 @@ public class AptService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 아파트입니다.");
         }
 
+        //지번에서 번과 지 추출 및 4자리로 포맷
+        // 예시 1: "601-8" → bun="0601", ji="0008"
+        // 예시 2: "213" → bun="0213", ji="0000"
+        String jibun = apt.getJibun();
+        String bun;
+        String ji;
+        // ㅁㅁㅁ - ㅁㅁ 구조 일 때
+        if (jibun.contains("-")) {
+
+            String[] parts = jibun.split("-");
+
+            if (parts.length != 2) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 지번 형식입니다.");
+            }
+            bun = String.format("%04d", Integer.parseInt(parts[0]));
+            ji = String.format("%04d", Integer.parseInt(parts[1]));
+        }
+        // - 기호가 없을 때 -> ji 값 없음
+        else {
+            bun = String.format("%04d", Integer.parseInt(jibun));
+            ji = "0000"; // 지가 없는 경우 기본값 설정
+        }
+
+        String sigunguCd = apt.getSggCd(); // 시군구코드
+        String bjdongCd = apt.getUmdCd(); // 법정동코드 (현재 프로젝트에서는 umdCd)
+
+        //외부 OpenAPI를 통해 건축물대장 정보 조회
+        BuildingInfoResponseDto buildingInfoResponse = webClientService.getBuildingInfo(sigunguCd, bjdongCd, bun, ji);
+
+        //응답 유효성 검사
+        if (buildingInfoResponse == null ||
+                buildingInfoResponse.getResponse() == null ||
+                !"00".equals(buildingInfoResponse.getResponse().getHeader().getResultCode())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "건축물대장 정보 조회에 실패했습니다.");
+        }
+
+        // 건축물대장 정보 항목 추출
+        List<BuildingInfoResponseDto.Item> items = buildingInfoResponse.getResponse().getBody().getItems().getItem();
+
+        //
+        if (items == null || items.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "건축물대장 정보가 존재하지 않습니다.");
+        }
+
+        //필요한 정보 추출 (첫 번째 항목 사용)
+        BuildingInfoResponseDto.Item buildingInfo = items.get(0);
+
+
+        //필요한 필드 파싱 및 변환
+        Integer homeCnt = buildingInfo.getHhldCnt(); //세대수
+        Double far =  buildingInfo.getVlRat(); //용적률
+        Double bcr = buildingInfo.getBcRat(); //건폐율
+        Integer flr = buildingInfo.getGrndFlrCnt(); //지상 층수
+
+
         // 서울특별시 서초구 <- 시도, 시군구 불러오기
         Dongcode dongcode = aptMapper.selectDongcodeByDongCd(apt.getRoadNmSggCd() + "00000");
         // 주소 만들기
@@ -45,17 +100,17 @@ public class AptService {
         AptInfo aptInfo = AptInfo.builder()
                 .aptNm(apt.getAptNm())
                 .address(aptAddress)
-                .homeCnt(0) // 세대수
+                .homeCnt(homeCnt) //세대수
                 .buildYear(apt.getBuildYear())
-                .maxFloor(20) // 최고층
-                .far(220) // 용적률
-                .bcr(15) // 건폐율
-                .dongCnt(12) // 동 개수
+                .far(far) //용적률
+                .bcr(bcr) //건폐율
+                .flrCnt(flr) //지상층수
                 .latitude(apt.getLatitude())
                 .longitude(apt.getLongitude())
                 .build();
 
         // 매물 정보 불러오기
+        // TODO 매물 금액 어떻게 처리할지 정하기
         List<AptSaleInfo> aptSaleInfo = aptMapper.selectAptSalesByAptId(aptId);
         aptSaleInfo.forEach(o -> {
             o.setPrice(NumberUtil.convertPrice(o.getPrice()));
@@ -88,7 +143,7 @@ public class AptService {
             aptSubwayInfoList.add(AptSubwayInfo.builder()
                     .station(subway.getStationNm())
                     .lineNm(lineNm)
-                    .color(subway.getColor())
+                    .color("#e36d12") // TODO 나중에 지하철 노선별 색 데이터 map에 넣고 빼서 쓰기 ex. map.get("9호선")
                     .dist(subway.getDistance().intValue())
                     .walk(subway.getDistance().intValue() / 100)
                     .lat(subway.getLat())

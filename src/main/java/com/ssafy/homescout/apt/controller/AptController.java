@@ -25,7 +25,7 @@ public class AptController {
 
     // 아파트 정보 조회
     @GetMapping("/{aptId}")
-    public ResponseEntity<?> getAptInfo(@PathVariable("aptId") String aptId) {
+    public ResponseEntity<?> getAptInfo(@PathVariable("aptId") String aptId){
         return ResponseEntity.ok(aptService.getAptInfo(aptId));
     }
 
