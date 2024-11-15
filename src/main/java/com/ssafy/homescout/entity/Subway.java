@@ -14,6 +14,7 @@ public class Subway {
     private String lineNm;
     private String lat;
     private String lng;
+    private String color;
     private Double distance;
 
 }
