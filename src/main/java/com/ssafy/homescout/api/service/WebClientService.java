@@ -10,6 +10,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 
 
@@ -47,6 +48,41 @@ public class WebClientService {
         return response;
     }
 
+    //주어진 좌표로부터 시군구 정보를 가져온다.
+    public String getRegionByCoordinates(double longitude, double latitude) {
+        WebClient webClient = WebClient.builder()
+                .baseUrl("https://dapi.kakao.com")
+                .build();
+
+        Map<String, Object> response = webClient
+                .get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path("/v2/local/geo/coord2regioncode.json")
+                                .queryParam("x", longitude)  // 경도(x)
+                                .queryParam("y", latitude)   // 위도(y)
+                                .queryParam("input_coord", "WGS84")
+                                .build())
+                .header("Authorization", "KakaoAK " + KAKAO_API_KEY)
+                .retrieve()
+                .bodyToMono(Map.class)
+                .block();
+
+        // 응답 유효성 검사
+        if (response == null || !response.containsKey("documents")) {
+            throw new RuntimeException("카카오 API에서 지역 정보를 가져오지 못했습니다.");
+        }
+
+        List<Map<String, Object>> documents = (List<Map<String, Object>>) response.get("documents");
+
+        if (documents.isEmpty()) {
+            throw new RuntimeException("제공된 좌표에 대한 지역 정보를 찾을 수 없습니다.");
+        }
+
+        // 시군구 정보는 "region_2depth_name" 필드에 위치
+        String region = (String) documents.get(0).get("region_2depth_name");
+        return region;
+    }
 
 
     @Value("${api.building-info.service-key}")

@@ -1,10 +1,12 @@
 package com.ssafy.homescout.map.controller;
 
+import com.ssafy.homescout.map.dto.RegionResponseDto;
 import com.ssafy.homescout.map.service.MapService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -18,6 +20,17 @@ public class MapController {
     @GetMapping("/safety")
     public ResponseEntity<?> getSafetyScore() {
         return ResponseEntity.ok(mapService.getSafetyScore());
+    }
+
+    @GetMapping("/current-region")
+    public ResponseEntity<RegionResponseDto> getCurrentRegion(
+            @RequestParam("latitude") double latitude,
+            @RequestParam("longitude") double longitude) {
+
+        String region = mapService.getRegionName(latitude, longitude);
+        System.out.println("현재 지역: "+region);
+        RegionResponseDto responseDto = new RegionResponseDto(region);
+        return ResponseEntity.ok(responseDto);
     }
 
 }
