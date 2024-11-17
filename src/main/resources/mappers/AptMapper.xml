@@ -5,7 +5,7 @@
 <mapper namespace="com.ssafy.homescout.apt.mapper.AptMapper">
 
     <select id="selectAllAptPos">
-        select apt_id, latitude, longitude from apt;
+        select apt_id, latitude, longitude from apt where sgg_cd like #{sggCd};
     </select>
 
     <select id="selectAptByAptId" resultType="com.ssafy.homescout.entity.Apt">
@@ -95,6 +95,7 @@
             life_story l
                 inner join
             user u on l.user_id = u.user_id
+        where l.apt_id like #{aptId}
         order by created_at desc
         limit 0, 3;
     </select>

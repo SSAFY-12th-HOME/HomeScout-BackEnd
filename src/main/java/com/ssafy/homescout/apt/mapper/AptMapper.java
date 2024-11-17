@@ -10,7 +10,7 @@ import java.util.List;
 @Mapper
 public interface AptMapper {
 
-    List<AptPosResponseDto> selectAllAptPos();
+    List<AptPosResponseDto> selectAllAptPos(String sggCd);
 
     Apt selectAptByAptId(String aptId);
 

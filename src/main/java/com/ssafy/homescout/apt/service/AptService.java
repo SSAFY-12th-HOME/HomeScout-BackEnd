@@ -24,8 +24,8 @@ public class AptService {
     private final AptMapper aptMapper;
     private final WebClientService webClientService;
 
-    public List<AptPosResponseDto> getAptAll() {
-        return aptMapper.selectAllAptPos();
+    public List<AptPosResponseDto> getAptAll(String sggCd) {
+        return aptMapper.selectAllAptPos(sggCd.substring(0,5));
     }
 
     public AptResponseDto getAptInfo(String aptId) {
@@ -140,10 +140,11 @@ public class AptService {
         for (Subway subway : subwayList) {
             // 09호선 -> 9호선 바꿔주기
             String lineNm = subway.getLineNm().charAt(0) == '0' ? subway.getLineNm().substring(1) : subway.getLineNm();
+            lineNm = lineNm.replace("호선", "");
             aptSubwayInfoList.add(AptSubwayInfo.builder()
                     .station(subway.getStationNm())
                     .lineNm(lineNm)
-                    .color("#e36d12") // TODO 나중에 지하철 노선별 색 데이터 map에 넣고 빼서 쓰기 ex. map.get("9호선")
+                    .color(subway.getColor())
                     .dist(subway.getDistance().intValue())
                     .walk(subway.getDistance().intValue() / 100)
                     .lat(subway.getLat())

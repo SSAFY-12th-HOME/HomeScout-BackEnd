@@ -19,8 +19,8 @@ public class AptController {
 
     // 아파트 마커 불러오기
     @GetMapping
-    public ResponseEntity<?> getAptAll() {
-        return ResponseEntity.ok(aptService.getAptAll());
+    public ResponseEntity<?> getAptAll(@RequestParam("sgg") String sggCd) {
+        return ResponseEntity.ok(aptService.getAptAll(sggCd));
     }
 
     // 아파트 정보 조회
