@@ -39,6 +39,8 @@ dependencies {
 	implementation 'io.awspring.cloud:spring-cloud-aws-starter'
 	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.777'
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
+	implementation 'io.github.flashvayne:chatgpt-spring-boot-starter:1.0.4'//gpt api
+	implementation 'com.squareup.okhttp3:okhttp:4.10.0'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.mysql:mysql-connector-j'

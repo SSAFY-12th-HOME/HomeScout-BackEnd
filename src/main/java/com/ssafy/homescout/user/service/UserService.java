@@ -183,4 +183,14 @@ public class UserService {
     public void addTokenToBlackList(String token) {
         blackList.add(token.substring(7));
     }
+
+    public UserRoleResponseDto getUserRole(Long userId) {
+        User user = userMapper.findUserByUserId(userId);
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"사용자를 찾을 수 없습니다.");
+        }
+        UserRoleResponseDto userRoleResponseDto = UserRoleResponseDto.builder().role(user.getRole()).build();
+        return userRoleResponseDto;
+    }
+
 }
