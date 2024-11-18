@@ -5,7 +5,7 @@
 <mapper namespace="com.ssafy.homescout.apt.mapper.AptMapper">
 
     <select id="selectAllAptPos">
-        select apt_id, latitude, longitude from apt where sgg_cd like #{sggCd};
+        select apt_id, apt_nm, latitude, longitude from apt where sgg_cd like #{sggCd};
     </select>
 
     <select id="selectAptByAptId" resultType="com.ssafy.homescout.entity.Apt">
@@ -114,7 +114,7 @@
     </select>
 
     <select id="selectAptPosByAptNm">
-        select apt_id, latitude, longitude from apt where apt_nm like CONCAT('%', #{aptNm}, '%')
+        select apt_id, apt_nm, latitude, longitude from apt where apt_nm like CONCAT('%', #{aptNm}, '%')
     </select>
 
     <select id="getSido">

@@ -10,6 +10,7 @@ import lombok.Setter;
 public class AptPosResponseDto {
 
     private String aptId;
+    private String aptNm;
     private String latitude;
     private String longitude;
 
