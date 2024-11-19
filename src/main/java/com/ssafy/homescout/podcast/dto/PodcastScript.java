@@ -10,6 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PodcastScript {
-    private String script;
+    //private String script;
     private List<Participant> participants;
+    private String podcastUrl; // S3 객체의 공개 URL
 }

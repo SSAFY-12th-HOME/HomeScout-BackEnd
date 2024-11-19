@@ -24,6 +24,33 @@ public class S3Service {
         this.amazonS3 = amazonS3;
     }
 
+
+    //S3 객체 키에 대한 공개 URL을 반환한다.
+    public String getPublicUrl(String objectKey) {
+        try {
+            return amazonS3.getUrl(bucket, objectKey).toString();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    //S3 객체의 존재 여부를 확인한다.
+    public boolean doesObjectExist(String objectKey) {
+        try {
+            System.out.println("Original key: " + objectKey);
+
+            // 실제 S3 객체 존재 여부 확인
+            boolean exists = amazonS3.doesObjectExist(bucket, objectKey);
+            System.out.println("Object exists: " + exists);
+
+            return exists;
+        } catch (Exception e) {
+            System.err.println("Error checking object existence: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public String uploadImage(MultipartFile image) {
         try {
             if(getFileExtension(image)) {
@@ -51,7 +78,7 @@ public class S3Service {
     private boolean getFileExtension(MultipartFile file){
         String extension = StringUtils.getFilenameExtension(file.getOriginalFilename());
 
-        return "jpg".equals(extension) || "png".equals(extension) || "jpeg".equals(extension);
+        return "jpg".equals(extension) || "png".equals(extension) || "jpeg".equals(extension) || "mp3".equalsIgnoreCase(extension);
     }
 
 }
