@@ -91,10 +91,8 @@ public class SaleService {
         }
     }
 
-    public void removeWishSale(Long saleId, Long wishSaleId) {
-        Long userId = 1L;
-
-        WishSale wishSale = saleMapper.selectWishSaleById(wishSaleId);
+    public void removeWishSale(Long saleId, Long userId) {
+        WishSale wishSale = saleMapper.selectWishSale(saleId, userId);
         if(wishSale == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 관심 매물입니다.");
         }
@@ -105,7 +103,7 @@ public class SaleService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "매물 등록 번호와 일치하지 않습니다.");
         }
 
-        saleMapper.deleteWishSale(wishSaleId);
+        saleMapper.deleteWishSale(wishSale.getWishSaleId());
     }
 
     public List<WishSaleResponseDto> getMyWishSaleList() {

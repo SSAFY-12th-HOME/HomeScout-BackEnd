@@ -28,7 +28,7 @@ public class AptService {
         return aptMapper.selectAllAptPos(sggCd.substring(0,5));
     }
 
-    public AptResponseDto getAptInfo(String aptId) {
+    public AptResponseDto getAptInfo(String aptId, Long userId) {
         // 아파트 정보 불러오기 (apt 테이블에서)
         Apt apt = aptMapper.selectAptByAptId(aptId);
         if(apt == null) {
@@ -96,7 +96,6 @@ public class AptService {
         String aptAddress = dongcode.getSidoNm() + " " + dongcode.getSggNm() + " "
                 + apt.getRoadNm() + " " + apt.getRoadNmBonbun() + "-" + apt.getRoadNmBubun();
         // 아파트 정보 초기화
-        // TODO 용적률, 최고층, 세대수 등 API 받아오기
         AptInfo aptInfo = AptInfo.builder()
                 .aptNm(apt.getAptNm())
                 .address(aptAddress)
@@ -110,8 +109,7 @@ public class AptService {
                 .build();
 
         // 매물 정보 불러오기
-        // TODO 매물 금액 어떻게 처리할지 정하기
-        List<AptSaleInfo> aptSaleInfo = aptMapper.selectAptSalesByAptId(aptId);
+        List<AptSaleInfo> aptSaleInfo = aptMapper.selectAptSalesByAptId(aptId, userId);
         aptSaleInfo.forEach(o -> {
             o.setPrice(NumberUtil.convertPrice(o.getPrice()));
             o.setDeposit(NumberUtil.convertPrice(o.getDeposit()));
@@ -211,5 +209,9 @@ public class AptService {
 
         // 위도, 경도 데이터 뽑아서 DTO로 변환
         return RegionPosResponseDto.of((String) documents.get("y"), (String) documents.get("x"));
+    }
+
+    public void deleteLifeStory(String lifeStoryId) {
+        aptMapper.deleteLifeStory(lifeStoryId);
     }
 }

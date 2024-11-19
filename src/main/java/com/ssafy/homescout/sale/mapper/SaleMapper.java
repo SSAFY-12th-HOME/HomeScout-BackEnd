@@ -26,7 +26,7 @@ public interface SaleMapper {
 
     void deleteWishSale(Long wishSaleId);
 
-    WishSale selectWishSaleById(Long wishSaleId);
+    WishSale selectWishSale(@Param("saleId") Long saleId, @Param("userId") Long userId);
 
     List<WishSaleResponseDto> selectWishSalesByUserId(Long userId);
 }

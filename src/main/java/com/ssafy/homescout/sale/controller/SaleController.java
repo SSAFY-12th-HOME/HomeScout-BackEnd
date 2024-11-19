@@ -62,10 +62,10 @@ public class SaleController {
     }
 
     // 관심 매물 삭제
-    @DeleteMapping("/{saleId}/wish/{wishSaleId}")
+    @DeleteMapping("/{saleId}/wish")
     public ResponseEntity<?> removeWishSale(@PathVariable("saleId") Long saleId,
-                                            @PathVariable("wishSaleId") Long wishSaleId) {
-        saleService.removeWishSale(saleId, wishSaleId);
+                                            @Auth Long userId) {
+        saleService.removeWishSale(saleId, userId);
         return ResponseEntity.ok().build();
     }
 

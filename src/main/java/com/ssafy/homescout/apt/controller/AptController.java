@@ -25,8 +25,9 @@ public class AptController {
 
     // 아파트 정보 조회
     @GetMapping("/{aptId}")
-    public ResponseEntity<?> getAptInfo(@PathVariable("aptId") String aptId){
-        return ResponseEntity.ok(aptService.getAptInfo(aptId));
+    public ResponseEntity<?> getAptInfo(@Auth Long userId,
+                                        @PathVariable("aptId") String aptId){
+        return ResponseEntity.ok(aptService.getAptInfo(aptId, userId));
     }
 
     // 살아본 이야기 등록
@@ -36,6 +37,14 @@ public class AptController {
                                             @Valid
                                             @RequestBody LifeStoryRequestDto lifeStoryRequestDto) {
         return ResponseEntity.ok(aptService.writeLifeStory(aptId, userId, lifeStoryRequestDto));
+    }
+
+    // 살아본 이야기 삭제
+    @DeleteMapping("/{aptId}/story/{lifeStoryId}")
+    public ResponseEntity<?> deleteLifeStory(@PathVariable("aptId") String aptId,
+                                            @PathVariable("lifeStoryId") String lifeStoryId) {
+        aptService.deleteLifeStory(lifeStoryId);
+        return ResponseEntity.ok().build();
     }
 
     // 아파트 이름으로 검색

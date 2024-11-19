@@ -10,6 +10,7 @@ import lombok.Setter;
 public class AptSaleInfo {
 
     private Long saleId;
+    private Boolean isWish;
     private String type; // 매매 or 전/월세
     private String price;
     private String deposit;

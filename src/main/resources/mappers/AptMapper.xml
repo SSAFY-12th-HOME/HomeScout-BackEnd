@@ -14,6 +14,7 @@
 
     <resultMap id="AptSalesInfo" type="com.ssafy.homescout.apt.dto.AptSaleInfo">
         <id property="saleId" column="sale_id"/>
+        <result property="isWish" column="is_wish"/>
         <result property="type" column="type"/>
         <result property="price" column="price"/>
         <result property="deposit" column="deposit"/>
@@ -35,6 +36,7 @@
     </resultMap>
     <select id="selectAptSalesByAptId" resultMap="AptSalesInfo">
         SELECT
+            (select exists (select 1 from wish_sale w where w.user_id = #{userId} and w.sale_id = s.sale_id)) is_wish,
             s.sale_id,
             s.type,
             s.price,
@@ -54,7 +56,8 @@
         FROM
             sale s
                 INNER JOIN
-            user u ON s.user_id = u.user_id
+            user u
+                ON s.user_id = u.user_id
         WHERE
             s.apt_id = #{aptId}
     </select>
@@ -128,4 +131,8 @@
     <select id="getDong">
         select dong_cd 'dong_code', dong_nm 'dong_name' from dongcode where dong_cd like concat(#{guCode}, '%') and length(dong_nm) != 0
     </select>
+
+    <delete id="deleteLifeStory">
+        delete from life_story where life_story_id = #{lifeStoryId}
+    </delete>
 </mapper>

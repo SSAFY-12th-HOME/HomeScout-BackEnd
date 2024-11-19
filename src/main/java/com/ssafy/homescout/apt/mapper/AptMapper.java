@@ -14,7 +14,7 @@ public interface AptMapper {
 
     Apt selectAptByAptId(String aptId);
 
-    List<AptSaleInfo> selectAptSalesByAptId(String aptId);
+    List<AptSaleInfo> selectAptSalesByAptId(@Param("aptId") String aptId, @Param("userId") Long userId);
 
     List<AptDeal> selectAptDealsByAptId(String aptId);
 
@@ -35,4 +35,6 @@ public interface AptMapper {
     List<GuResponseDto> getGu(String sidoCode);
 
     List<DongResponseDto> getDong(String guCode);
+
+    void deleteLifeStory(String lifeStoryId);
 }
