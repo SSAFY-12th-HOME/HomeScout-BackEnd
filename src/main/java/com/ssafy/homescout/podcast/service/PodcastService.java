@@ -25,15 +25,20 @@ public class PodcastService {
         String districtName = mapService.getRegionName(latitude, longitude);
         System.out.println("현재 요청 된 시군구: "+districtName);
 
-        if (districtName == null) {
-            throw new IllegalArgumentException("유효하지 않은 시군구 이름: " + districtName);
+        String districtCode = mapService.getRegionCode(latitude, longitude);
+        System.out.println("현재 요청 된 시군구 코드: "+districtCode);
+
+        if (districtCode == null) {
+            throw new IllegalArgumentException("유효하지 않은 시군구 코드: " + districtCode);
         }
+
+        userRole = userRole.equals("일반") ? "NORMAL" : "REALTOR";
 
         // 2. 사용자 역할 매핑
         UserRole role = UserRole.fromString(userRole);
 
         // 3. S3 객체 키 생성
-        String objectKey = s3ManagerService.generateObjectKey(districtName ,role.getRoleName());
+        String objectKey = s3ManagerService.generateObjectKey(districtCode ,role.getRoleName());
 
         // 4. S3 URL 가져오기
         String podcastUrl = s3ManagerService.getPodcastUrl(objectKey);
@@ -49,6 +54,7 @@ public class PodcastService {
         //podcastScript.setScript(null); // 대본은 스케줄러에서 생성되므로 null로 설정
         podcastScript.setParticipants(participants);
         podcastScript.setPodcastUrl(podcastUrl); // S3 URL 설정
+        podcastScript.setDistrictName(districtName); //시군구 이름 반환
 
         return podcastScript;
     }

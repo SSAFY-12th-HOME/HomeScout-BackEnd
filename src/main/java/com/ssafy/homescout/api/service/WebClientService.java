@@ -85,6 +85,7 @@ public class WebClientService {
     }
 
 
+
     @Value("${api.building-info.service-key}")
     private String serviceKey;
 
@@ -125,4 +126,55 @@ public class WebClientService {
             throw new RuntimeException("Failed to encode serviceKey or build URI", e);
         }
     }
+
+    //주어진 좌표로부터 법정코드의 앞 5자리를 추출하고, 뒤에 "00000"을 붙여 10자리 문자열을 반환
+    public String getLegalCodeByCoordinates(double longitude, double latitude) {
+        // WebClient를 사용하여 Kakao API 호출 준비
+        WebClient webClient = WebClient.builder()
+                .baseUrl("https://dapi.kakao.com")
+                .build();
+
+        // Kakao API에 GET 요청을 보내고 응답을 Map 형태로 받습니다.
+        Map<String, Object> response = webClient
+                .get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path("/v2/local/geo/coord2regioncode.json")
+                                .queryParam("x", longitude)        // 경도(x)
+                                .queryParam("y", latitude)         // 위도(y)
+                                .queryParam("input_coord", "WGS84") // 좌표 체계 설정
+                                .build())
+                .header("Authorization", "KakaoAK " + KAKAO_API_KEY) // 인증 헤더 설정
+                .retrieve()
+                .bodyToMono(Map.class)
+                .block();
+
+        // 응답 유효성 검사
+        if (response == null || !response.containsKey("documents")) {
+            throw new RuntimeException("카카오 API에서 지역 정보를 가져오지 못했습니다.");
+        }
+
+        // 'documents' 필드에서 지역 정보 리스트를 추출
+        List<Map<String, Object>> documents = (List<Map<String, Object>>) response.get("documents");
+
+        if (documents.isEmpty()) {
+            throw new RuntimeException("제공된 좌표에 대한 지역 정보를 찾을 수 없습니다.");
+        }
+
+        // 첫 번째 문서에서 'code' 필드를 추출
+        String code = (String) documents.get(0).get("code");
+
+        if (code == null || code.length() < 5) {
+            throw new RuntimeException("법정코드를 올바르게 추출하지 못했습니다.");
+        }
+
+        // 법정코드의 앞 5자리 추출
+        String firstFiveDigits = code.substring(0, 5);
+
+        // 뒤에 "00000"을 붙여 최종 10자리 코드 생성
+        String finalCode = firstFiveDigits + "00000";
+
+        return finalCode;
+    }
+
 }

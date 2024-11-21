@@ -1,8 +1,8 @@
 package com.ssafy.homescout.podcast.dto;
 
 public enum UserRole {
-    GENERAL("일반"),
-    REALTOR("공인중개사");
+    NORMAL("NORMAL"),
+    REALTOR("REALTOR");
 
     private final String roleName;
 

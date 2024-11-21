@@ -24,4 +24,8 @@ public class MapService {
     public String getRegionName(double latitude, double longitude){
         return webClientService.getRegionByCoordinates(longitude, latitude);
     }
+
+    public String getRegionCode(double latitude, double longitude){
+        return webClientService.getLegalCodeByCoordinates(longitude, latitude);
+    }
 }

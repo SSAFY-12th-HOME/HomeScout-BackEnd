@@ -37,7 +37,7 @@ dependencies {
 	implementation 'com.sun.xml.bind:jaxb-core:4.0.1'
 	implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
 	implementation 'io.awspring.cloud:spring-cloud-aws-starter'
-	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.777'
+	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.777'homescout
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
 	implementation 'io.github.flashvayne:chatgpt-spring-boot-starter:1.0.4'//gpt api
 	implementation 'com.squareup.okhttp3:okhttp:4.10.0'

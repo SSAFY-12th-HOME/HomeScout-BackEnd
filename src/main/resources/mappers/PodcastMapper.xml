@@ -6,6 +6,6 @@
 
 
     <select id="selectAllDongCd">
-        select * from dongcode where dong_nm = null;
+        select * from dongcode where sgg_nm !="" and dong_nm = "";
     </select>
 </mapper>
