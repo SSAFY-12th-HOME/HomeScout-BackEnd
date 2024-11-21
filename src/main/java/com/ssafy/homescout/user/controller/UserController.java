@@ -34,6 +34,15 @@ public class UserController {
         return ResponseEntity.ok(userService.login(loginRequestDto));
     }
 
+    // 회원 정보 수정 전 비밀번호 확인
+    @PostMapping("/check-password")
+    public ResponseEntity<?> checkPassword(@Auth Long userId,
+                                           @RequestBody PasswordRequestDto passwordRequestDto) {
+        userService.checkPassword(userId, passwordRequestDto);
+        return ResponseEntity.ok().build();
+    }
+
+    // 회원 정보 수정 페이지
     @GetMapping
     public ResponseEntity<?> getUserInfo(@Auth Long userId) {
         return ResponseEntity.ok(userService.getUserInfo(userId));
@@ -73,7 +82,7 @@ public class UserController {
                              @RequestParam("file") MultipartFile file) {
         String imgUrl = s3Service.uploadImage(file);
         userService.updateProfileImg(userId, imgUrl);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(ImageUrlResponseDto.of(imgUrl));
     }
 
 }

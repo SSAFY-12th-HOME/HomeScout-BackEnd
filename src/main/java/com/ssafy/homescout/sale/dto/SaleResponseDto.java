@@ -13,9 +13,9 @@ public class SaleResponseDto {
     private String aptId;
     private String aptNm;
     private String type;
-    private Integer price;
-    private Integer deposit;
-    private Integer rentalFee;
+    private String price;
+    private String deposit;
+    private String rentalFee;
     private Integer dong;
     private Integer floor;
     private String area;

@@ -77,8 +77,11 @@ public class S3Service {
 
     private boolean getFileExtension(MultipartFile file){
         String extension = StringUtils.getFilenameExtension(file.getOriginalFilename());
+        System.out.println(extension);
 
-        return "jpg".equals(extension) || "png".equals(extension) || "jpeg".equals(extension) || "mp3".equalsIgnoreCase(extension);
+        return "jpg".equalsIgnoreCase(extension) || "png".equalsIgnoreCase(extension)
+                || "jpeg".equalsIgnoreCase(extension) || "mp3".equalsIgnoreCase(extension)
+                || "webp".equalsIgnoreCase(extension);
     }
 
 }

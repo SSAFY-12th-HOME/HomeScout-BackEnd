@@ -193,4 +193,14 @@ public class UserService {
         return userRoleResponseDto;
     }
 
+    public void checkPassword(Long userId, PasswordRequestDto passwordRequestDto) {
+        System.out.println(userId);
+        User user = userMapper.findUserByUserId(userId);
+        String rawPassword = passwordRequestDto.getPassword();
+        String encodedPassword = user.getPassword();
+
+        if(!passwordEncoder.matches(rawPassword, encodedPassword)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다.");
+        }
+    }
 }

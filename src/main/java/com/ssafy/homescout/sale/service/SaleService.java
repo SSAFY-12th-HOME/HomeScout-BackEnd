@@ -7,6 +7,7 @@ import com.ssafy.homescout.sale.dto.SaleRequestDto;
 import com.ssafy.homescout.sale.dto.SaleResponseDto;
 import com.ssafy.homescout.sale.dto.WishSaleResponseDto;
 import com.ssafy.homescout.sale.mapper.SaleMapper;
+import com.ssafy.homescout.util.NumberUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,13 @@ public class SaleService {
     }
 
     public List<SaleResponseDto> getMySaleList(Long userId) {
-        return saleMapper.selectSalesByUserId(userId);
+        List<SaleResponseDto> mySaleList = saleMapper.selectSalesByUserId(userId);
+        mySaleList.forEach(o -> {
+            o.setPrice(NumberUtil.convertPrice(o.getPrice()));
+            o.setDeposit(NumberUtil.convertPrice(o.getDeposit()));
+            o.setRentalFee(NumberUtil.convertPrice(o.getRentalFee()));
+        });
+        return mySaleList;
     }
 
     public Sale editSale(Long saleId, Long userId, SaleEditRequestDto saleEditRequestDto) {
@@ -106,9 +113,15 @@ public class SaleService {
         saleMapper.deleteWishSale(wishSale.getWishSaleId());
     }
 
-    public List<WishSaleResponseDto> getMyWishSaleList() {
-        Long userId = 1L;
+    public List<WishSaleResponseDto> getMyWishSaleList(Long userId) {
+        List<WishSaleResponseDto> myWishSaleList = saleMapper.selectWishSalesByUserId(userId);
 
-        return saleMapper.selectWishSalesByUserId(userId);
+        myWishSaleList.forEach(o -> {
+            o.setPrice(NumberUtil.convertPrice(o.getPrice()));
+            o.setDeposit(NumberUtil.convertPrice(o.getDeposit()));
+            o.setRentalFee(NumberUtil.convertPrice(o.getRentalFee()));
+        });
+
+        return myWishSaleList;
     }
 }

@@ -49,8 +49,8 @@ public class SaleController {
 
     // 관심 매물 리스트 조회
     @GetMapping("/wish")
-    public ResponseEntity<?> getMyWishSaleList() {
-        return ResponseEntity.ok(saleService.getMyWishSaleList());
+    public ResponseEntity<?> getMyWishSaleList(@Auth Long userId) {
+        return ResponseEntity.ok(saleService.getMyWishSaleList(userId));
     }
 
     // 관심 매물 등록

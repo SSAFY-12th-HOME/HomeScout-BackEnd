@@ -11,6 +11,7 @@ import lombok.Setter;
 public class MyPageResponseDto {
 
     private String nickname;
+    private String email;
     private String profileImg;
     private Integer exp;
     private Boolean isBadge;
@@ -19,8 +20,9 @@ public class MyPageResponseDto {
         return MyPageResponseDto.builder()
                 .nickname(user.getNickname())
                 .profileImg(user.getProfileImg())
+                .email(user.getEmail())
                 .exp(user.getExp())
-                .isBadge(user.getExp() == 1000)
+                .isBadge(user.getExp() >= 1000)
                 .build();
     }
 

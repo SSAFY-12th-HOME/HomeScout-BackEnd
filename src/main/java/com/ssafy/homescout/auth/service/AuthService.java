@@ -43,6 +43,7 @@ public class AuthService {
 
     // 인증코드 생성 및 이메일 전송
     public void sendAuthCode(String email) {
+
         // 인증코드 6자리 생성
         String authCode = NumberUtil.generateAuthCode();
 
