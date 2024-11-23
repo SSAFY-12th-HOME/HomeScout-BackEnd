@@ -135,11 +135,18 @@ public class QuizService {
             User user = userMapper.findUserByUserId(userId);
             userMapper.updateUserExp(userId, user.getExp() + quiz.getExp());
             quizMapper.insertUserQuizSolve(userId, quizId);
+            quizMapper.updateSolvedCount(quizId, quiz.getSolvedCount() + 1);
         }
 
         // DTO 담아서 반환
         return QuizSolveResponseDto.of(answerList.size(),
                 correctCount,
                 answerList.size() == correctCount ? quiz.getExp() : 0);
+    }
+
+    public List<QuizListResponseDto> getMyQuiz(Long userId) {
+        return quizMapper.getMyQuizList(userId).stream().map(
+                o -> QuizListResponseDto.of(o, Boolean.TRUE)
+        ).toList();
     }
 }

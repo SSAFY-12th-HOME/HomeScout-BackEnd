@@ -50,7 +50,7 @@
             <result property="email" column="email"/>
             <result property="password" column="password"/>
             <result property="nickname" column="nickname"/>
-            <result property="profileImg" column="profileImg"/>
+            <result property="profileImg" column="profile_img"/>
             <result property="phone" column="phone"/>
             <result property="role" column="role"/>
             <result property="exp" column="exp"/>
@@ -94,5 +94,17 @@
         insert into user_quiz_solve
         values (#{userId}, #{quizId})
     </insert>
+
+    <update id="updateSolvedCount">
+        update quiz set solved_count=#{solvedCount} where quiz_id=#{quizId}
+    </update>
+
+    <select id="getMyQuizList" resultMap="QuizUser">
+        select q.*, u.*
+        from quiz q inner join user u
+        on q.user_id = u.user_id
+        where u.user_id = #{userId}
+        order by q.quiz_id
+    </select>
 
 </mapper>

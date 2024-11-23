@@ -8,6 +8,6 @@ import java.util.List;
 @Mapper
 public interface MapMapper {
 
-    List<SafetyScore> selectAllSafetyScore();
+    List<SafetyScore> selectAllSafetyScore(String sidoCd);
 
 }

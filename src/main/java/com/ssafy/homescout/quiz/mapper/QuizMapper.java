@@ -4,6 +4,7 @@ import com.ssafy.homescout.entity.Quiz;
 import com.ssafy.homescout.entity.QuizOption;
 import com.ssafy.homescout.entity.QuizQuestion;
 import com.ssafy.homescout.entity.QuizUser;
+import com.ssafy.homescout.quiz.dto.QuizListResponseDto;
 import com.ssafy.homescout.quiz.dto.QuizSolveRequestDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -35,4 +36,8 @@ public interface QuizMapper {
     List<QuizSolveRequestDto.SolveDto> selectAnswerByQuizId(Long quizId);
 
     void insertUserQuizSolve(@Param("userId") Long userId, @Param("quizId") Long quizId);
+
+    void updateSolvedCount(@Param("quizId") Long quizId, @Param("solvedCount") Integer solvedCount);
+
+    List<QuizUser> getMyQuizList(Long userId);
 }

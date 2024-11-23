@@ -18,8 +18,8 @@ public class MapController {
 
     // 안전 등급 불러오기
     @GetMapping("/safety")
-    public ResponseEntity<?> getSafetyScore() {
-        return ResponseEntity.ok(mapService.getSafetyScore());
+    public ResponseEntity<?> getSafetyScore(@RequestParam("sidoCd") String sidoCd) {
+        return ResponseEntity.ok(mapService.getSafetyScore(sidoCd));
     }
 
     @GetMapping("/current-region")

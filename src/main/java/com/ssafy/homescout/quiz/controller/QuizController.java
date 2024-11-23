@@ -54,4 +54,10 @@ public class QuizController {
         return ResponseEntity.ok(quizService.submitQuizSolve(userId, quizId, quizSolveRequestDto));
     }
 
+    // 내가 만든 퀴즈 조회
+    @GetMapping("/my")
+    public ResponseEntity<?> getMyQuiz(@Auth Long userId) {
+        return ResponseEntity.ok(quizService.getMyQuiz(userId));
+    }
+
 }

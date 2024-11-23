@@ -6,6 +6,6 @@
 
 
     <select id="selectAllSafetyScore">
-        select * from safety_score;
+        select * from safety_score where sgg_cd like concat(#{sidoCd}, '%');
     </select>
 </mapper>
