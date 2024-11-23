@@ -8,14 +8,12 @@ import com.ssafy.homescout.entity.Message;
 import com.ssafy.homescout.entity.User;
 import com.ssafy.homescout.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -67,6 +65,7 @@ public class ChatService {
         responseDto.setMessageType(message.getMessageType());
         responseDto.setCreatedAt(message.getCreatedAt());
         responseDto.setFileUrl(message.getFileUrl());
+
 
         return responseDto;
     }

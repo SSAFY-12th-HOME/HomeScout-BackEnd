@@ -2,6 +2,8 @@ package com.ssafy.homescout.chat.controller;
 
 import com.ssafy.homescout.chat.dto.*;
 import com.ssafy.homescout.chat.service.ChatService;
+import com.ssafy.homescout.user.dto.UserInfoResponseDto;
+import com.ssafy.homescout.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Controller;
 public class ChatController {
 
     private final ChatService chatService;
+    private final UserService userService;
 
     //SimpMessagingTemplate : 메시지를 특정 사용자 또는 목적지(destination)로 전송하는 데 사용한다.
     private final SimpMessagingTemplate messagingTemplate;
@@ -31,20 +34,26 @@ public class ChatController {
         // 비즈니스 로직 처리: 메시지를 데이터베이스에 저장하고, 응답 DTO를 반환받음
         SendMessageResponseDto responseDto = chatService.sendMessage(sendMessageRequestDto);
 
-
+        UserInfoResponseDto sendUser = userService.getUserInfo(sendMessageRequestDto.getSenderId());
 
         // ChatMessage DTO : 클라이언트에게 전달할 메시지 데이터 구조
-        ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setType(responseDto.getMessageType());           // 메시지 타입 (예: CHAT) -> 현재는 모두 CHAT으로 설정됨
-        chatMessage.setSenderId(responseDto.getUserId());            // 발신자 ID
-        chatMessage.setReceiverId(sendMessageRequestDto.getReceiverId()); // 수신자 ID
+        MessageResponseDto chatMessage = new MessageResponseDto();
+        chatMessage.setChatRoomId(responseDto.getChatRoomId()); //채팅방 아이디
+        chatMessage.setUserId(responseDto.getUserId()); //발신자 ID
+        chatMessage.setProfileImg(sendUser.getProfileImg()); //발신자 프로필
+        chatMessage.setNickname(sendUser.getNickname());    //닉네임
+        chatMessage.setCreatedAt(responseDto.getCreatedAt()); //시간
+        //chatMessage.setType(responseDto.getMessageType());           // 메시지 타입 (예: CHAT) -> 현재는 모두 CHAT으로 설정됨
+        //chatMessage.setSenderId(responseDto.getUserId());            // 발신자 ID
+        //chatMessage.setReceiverId(sendMessageRequestDto.getReceiverId()); // 수신자 ID
         chatMessage.setContent(responseDto.getContent());             // 실제 메시지 내용
         chatMessage.setFileUrl(responseDto.getFileUrl());             // 파일 URL (옵션)
 
+        System.out.println("chatMessage = " + chatMessage.toString());
         // 수신자 전용 채널로 메시지 전송
         messagingTemplate.convertAndSend("/queue/messages/" + receiverId.toString(), chatMessage);
         // 발신자 전용 채널로도 메시지 전송 (본인 채팅창 동기화)
-        messagingTemplate.convertAndSend("/queue/messages/" + sendMessageRequestDto.getSenderId(), chatMessage);
+        //messagingTemplate.convertAndSend("/queue/messages/" + sendMessageRequestDto.getSenderId(), chatMessage);
 
     }
 

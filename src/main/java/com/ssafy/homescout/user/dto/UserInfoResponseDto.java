@@ -12,6 +12,7 @@ public class UserInfoResponseDto {
     private String email;
     private String nickname;
     private String phone;
+    private String profileImg;
 
     public static UserInfoResponseDto of(User user) {
         return UserInfoResponseDto.builder()
@@ -19,6 +20,7 @@ public class UserInfoResponseDto {
                 .email(user.getEmail())
                 .nickname(user.getNickname())
                 .phone(user.getPhone())
+                .profileImg(user.getProfileImg())
                 .build();
     }
 

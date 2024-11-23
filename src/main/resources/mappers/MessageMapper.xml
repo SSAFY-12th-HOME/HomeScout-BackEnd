@@ -7,8 +7,25 @@
 
 
     <insert id="insertMessage" parameterType="com.ssafy.homescout.entity.Message" useGeneratedKeys="true" keyProperty="messageId">
-        INSERT INTO message(chat_room_id, user_id, content, message_type, created_at, file_url)
-        VALUES(#{chatRoomId}, #{userId}, #{content}, #{messageType}, NOW(), #{fileUrl})
+        INSERT INTO message(
+            chat_room_id,
+            user_id,
+            content,
+            message_type,
+            created_at,
+            file_url,
+            profile_img
+        )
+        SELECT
+            #{chatRoomId},
+            #{userId},
+            #{content},
+            #{messageType},
+            NOW(),
+            #{fileUrl},
+            u.profile_img
+        FROM user u
+        WHERE u.user_id = #{userId}
     </insert>
 
     <!-- 특정 채팅방의 모든 메시지 조회 -->
