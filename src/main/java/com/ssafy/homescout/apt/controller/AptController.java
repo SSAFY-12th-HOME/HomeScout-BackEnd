@@ -65,6 +65,12 @@ public class AptController {
         return ResponseEntity.ok(aptService.getGu(sidoCode));
     }
 
+    // 시도 중심 좌표 및 지도 스케일 조회
+    @GetMapping("/region/center")
+    public ResponseEntity<?> getSidoCenter(@RequestParam("sido") String sidoCode) {
+        return ResponseEntity.ok(aptService.getSidoCenter(sidoCode));
+    }
+
     // 읍면동 데이터 조회
     @GetMapping("/region/dong")
     public ResponseEntity<?> getDong(@RequestParam("gu") String guCode) {

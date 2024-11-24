@@ -135,4 +135,8 @@
     <delete id="deleteLifeStory">
         delete from life_story where life_story_id = #{lifeStoryId}
     </delete>
+
+    <select id="getSidoCenter">
+        select lat, lng, scale from sido_center where sido_cd = #{sidoCode}
+    </select>
 </mapper>

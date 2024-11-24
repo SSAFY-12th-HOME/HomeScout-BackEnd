@@ -214,4 +214,8 @@ public class AptService {
     public void deleteLifeStory(String lifeStoryId) {
         aptMapper.deleteLifeStory(lifeStoryId);
     }
+
+    public SidoCenterResponseDto getSidoCenter(String sidoCode) {
+        return aptMapper.getSidoCenter(sidoCode);
+    }
 }

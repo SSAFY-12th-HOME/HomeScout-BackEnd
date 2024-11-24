@@ -37,4 +37,6 @@ public interface AptMapper {
     List<DongResponseDto> getDong(String guCode);
 
     void deleteLifeStory(String lifeStoryId);
+
+    SidoCenterResponseDto getSidoCenter(String sidoCode);
 }
