@@ -13,5 +13,7 @@ public class AptPosResponseDto {
     private String aptNm;
     private String latitude;
     private String longitude;
+    private String dealAmount;
+    private String area;
 
 }

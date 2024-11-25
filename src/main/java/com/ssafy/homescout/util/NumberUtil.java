@@ -57,4 +57,26 @@ public class NumberUtil {
 
         return result.toString();
     }
+
+    public static String convertMarkerPrice(String input) {
+        int price = Integer.parseInt(input.replace(",", ""));
+
+        if (price >= 10000) { // 억 단위로 변환
+            double converted = price / 10000.0;
+            return String.format("%.1f억", converted);
+        } else if (price >= 1000) { // 천 단위로 변환
+            double converted = price / 1000.0;
+            return String.format("%.1f천", converted);
+        } else { // 1000 미만의 경우 그대로 출력
+            return price + "만";
+        }
+    }
+
+    private static final double SQUARE_METER_TO_PYEONG = 1 / 3.305785;
+
+    public static String convertToPyeong(String squareMeters) {
+        double squareMeter = Double.parseDouble(squareMeters);
+        double pyeong = squareMeter * SQUARE_METER_TO_PYEONG;
+        return String.format("%.1f평", pyeong);
+    }
 }

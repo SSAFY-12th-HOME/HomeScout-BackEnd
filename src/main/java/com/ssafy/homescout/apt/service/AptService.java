@@ -25,7 +25,14 @@ public class AptService {
     private final WebClientService webClientService;
 
     public List<AptPosResponseDto> getAptAll(String sggCd) {
-        return aptMapper.selectAllAptPos(sggCd.substring(0,5));
+        List<AptPosResponseDto> aptPosResponseDtoList = aptMapper.selectAllAptPos(sggCd.substring(0, 5));
+        aptPosResponseDtoList.forEach(o -> {
+            o.setDealAmount(
+                    NumberUtil.convertMarkerPrice(o.getDealAmount()).replace(".0", "")
+            );
+            o.setArea(NumberUtil.convertToPyeong(o.getArea()).replace(".0", ""));
+        });
+        return aptPosResponseDtoList;
     }
 
     public AptResponseDto getAptInfo(String aptId, Long userId) {

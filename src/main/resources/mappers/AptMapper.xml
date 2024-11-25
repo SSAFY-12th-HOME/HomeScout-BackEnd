@@ -5,7 +5,18 @@
 <mapper namespace="com.ssafy.homescout.apt.mapper.AptMapper">
 
     <select id="selectAllAptPos">
-        select apt_id, apt_nm, latitude, longitude from apt where sgg_cd like #{sggCd};
+        select a.apt_id, a.apt_nm, a.latitude, a.longitude,
+               (select deal_amount
+                from aptdeal
+                where apt_id = a.apt_id
+                order by deal_year desc, deal_month desc, deal_day desc
+                limit 0, 1) 'deal_amount',
+               (select area
+                from aptdeal
+                where apt_id = a.apt_id
+                order by deal_year desc, deal_month desc, deal_day desc
+                limit 0, 1) 'area'
+        from apt a where sgg_cd like #{sggCd}
     </select>
 
     <select id="selectAptByAptId" resultType="com.ssafy.homescout.entity.Apt">
