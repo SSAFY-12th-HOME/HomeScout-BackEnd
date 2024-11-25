@@ -17,6 +17,7 @@
                 order by deal_year desc, deal_month desc, deal_day desc
                 limit 0, 1) 'area'
         from apt a where sgg_cd like #{sggCd}
+        limit 0, 100
     </select>
 
     <select id="selectAptByAptId" resultType="com.ssafy.homescout.entity.Apt">
@@ -128,7 +129,11 @@
     </select>
 
     <select id="selectAptPosByAptNm">
-        select apt_id, apt_nm, latitude, longitude from apt where apt_nm like CONCAT('%', #{aptNm}, '%')
+        select a.apt_id, a.apt_nm, a.latitude, a.longitude,
+               (select deal_amount from aptdeal where apt_id = a.apt_id order by deal_year desc, deal_month desc, deal_day desc limit 0, 1) 'deal_amount',
+               (select area from aptdeal where apt_id = a.apt_id order by deal_year desc, deal_month desc, deal_day desc limit 0, 1) 'area'
+        from apt a where apt_nm like concat('%', #{aptNm}, '%')
+        limit 0, 5
     </select>
 
     <select id="getSido">
