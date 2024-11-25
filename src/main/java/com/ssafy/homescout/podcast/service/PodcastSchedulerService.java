@@ -24,7 +24,7 @@ public class PodcastSchedulerService {
     private final PodcastS3ManagerService s3ManagerService;
 
 
-    @Scheduled(cron = "0 0 6 * * *")
+    @Scheduled(cron = "00 00 06 * * *")
     public void generateAndUploadPodcasts() {
         log.info("팟캐스트 생성 스케줄러 시작.");
 
@@ -32,6 +32,13 @@ public class PodcastSchedulerService {
         List<Dongcode> dongcodes = podcastMapper.selectAllDongCd();
 
         for (Dongcode sgg : dongcodes) {
+
+            //토큰 부족해서 우선 이렇게 설정
+            if(!sgg.getSidoNm().equals("서울특별시")){
+                break;
+            }
+
+
             for (UserRole role : UserRole.values()) {
                 try {
                     log.info("팟캐스트 생성: 시군구={}, 역할={}", sgg.getSggNm(), role.getRoleName());
@@ -61,23 +68,21 @@ public class PodcastSchedulerService {
                     log.error("팟캐스트 생성 실패: 시군구={}, 역할={}, 오류={}",  sgg.getSggNm(), role.getRoleName(), e.getMessage());
                     // 필요에 따라 예외를 처리하거나 알림을 보낼 수 있습니다.
                 }
-                //테스트용
-                break;
             }
-            //테스트용
             break;
         }
 
         log.info("팟캐스트 생성 스케줄러 완료.");
+        System.out.println();
     }
 
     public void saveToS3(Dongcode sgg, UserRole role, byte[] ttsResult) {
-        // TODO S3 객체 키 생성
+        // S3 객체 키 생성(이름 생성)
         String fileName = s3ManagerService.generateObjectKey( sgg.getDongCd(), role.getRoleName());
         //fileName : "11100000000_NORMAL.mp3"
 
 
-        // TODO TTS 사용 시, mp3 업로드
+        // TTS mp3 업로드
         String podcastUrl = s3ManagerService.uploadPodcast(ttsResult, fileName); // mp3 데이터, 경로
 
         // 현재 Clova TTS 미사용, S3에 이미 mp3 파일이 있다고 가정

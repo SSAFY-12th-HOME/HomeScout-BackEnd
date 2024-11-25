@@ -40,7 +40,7 @@ public class PodcastScriptGeneratorService {
         String prompt = createPrompt(newsArticles, userRole);
 
         ObjectNode requestBody = objectMapper.createObjectNode();
-        requestBody.put("model", "gpt-4");
+        requestBody.put("model", "gpt-4o-mini");
         requestBody.put("temperature", 0.7);
 
         ObjectNode userMessage = objectMapper.createObjectNode();
@@ -68,17 +68,43 @@ public class PodcastScriptGeneratorService {
 
             String responseBody = response.body().string();
             ObjectNode responseJson = (ObjectNode) objectMapper.readTree(responseBody);
-            JsonNode script = responseJson
+
+            //디버깅 용
+            System.out.println("responseJson!!!! : "+responseJson);
+
+            JsonNode contentNode = responseJson
                     .path("choices")
                     .get(0)
                     .path("message")
-                    .path("content")
-                    .path("script");
+                    .path("content");
 
-            ArrayNode scriptArray = (ArrayNode) script;
+            if (contentNode.isMissingNode() || !contentNode.isTextual()) {
+                throw new IllegalArgumentException("'content' 필드가 누락되었거나 텍스트 형식이 아닙니다.");
+            }
+
+            String contentStr = contentNode.asText();
+
+            String jsonContent = stripCodeBlock(contentStr);
+
+            // "content" 문자열을 JSON으로 파싱
+            JsonNode contentJson = objectMapper.readTree(jsonContent);
+
+            // "script" 필드 접근
+            JsonNode scriptNode = contentJson.path("script");
+
+            if (scriptNode.isMissingNode()) {
+                throw new IllegalArgumentException("Parsed JSON에 'script' 필드가 존재하지 않습니다.");
+            }
+
+            if (!scriptNode.isArray()) {
+                throw new IllegalArgumentException("'script' 필드는 배열 형식이어야 합니다.");
+            }
+
+            ArrayNode scriptArray = (ArrayNode) scriptNode;
 
             //최종 스크립트
             ArrayList<String[]> scriptList = new ArrayList<>();
+
 
             for (JsonNode jsonNode : scriptArray) {
                 String[] element = new String[2];
@@ -93,14 +119,31 @@ public class PodcastScriptGeneratorService {
 
             }
 
-            //디버깅 용
-            System.out.println("responseJson!!!! : "+responseJson);
+                //System.out.println("대본 리스트 사이즈"+scriptList.size());
+
 
             return scriptList;
+
         } catch (IOException e) {
             throw new RuntimeException("팟캐스트 대본 생성 중 오류 발생: " + e.getMessage(), e);
         }
     }
+
+    /**
+     * 코드 블록을 제거하는 메서드.
+     * 예: ```json\n{...}\n```
+     */
+    private String stripCodeBlock(String content) {
+        if (content.startsWith("```")) {
+            int firstNewline = content.indexOf('\n');
+            int lastFence = content.lastIndexOf("```");
+            if (firstNewline != -1 && lastFence != -1 && lastFence > firstNewline) {
+                return content.substring(firstNewline + 1, lastFence).trim();
+            }
+        }
+        return content;
+    }
+
 
     private String createPrompt(List<NewsArticle> newsArticles, String userRole){
 
@@ -153,10 +196,10 @@ public class PodcastScriptGeneratorService {
 
          [JSON 형식]
          {
-                 script : [
+                 "script" : [
                                  {
-                                         speaker : "Host" or "Guest"
-                                         text : String\s
+                                         "speaker" : "Host" or "Guest"
+                                         "text" : String\s
                                  }
                   ]
          }
@@ -183,12 +226,15 @@ public class PodcastScriptGeneratorService {
 
         //api로 byte를 받아오는데 해당 바이트를 저장하는 배열
 //        ArrayList<byte[]> mp3ByteArray = new ArrayList<>();
+
         ArrayList<Byte> mp3ByteArray = new ArrayList<>();
+
         for (int i = 0; i < podcastScriptText.size(); i++) {
 
-            if(i == 2){
-                break;
-            }
+//            if(i == 2){ 테스트 용
+//                break;
+//            }
+
             OkHttpClient client = new OkHttpClient.Builder()
                     .connectTimeout(30, TimeUnit.SECONDS)
                     .writeTimeout(120, TimeUnit.SECONDS)
@@ -220,6 +266,7 @@ public class PodcastScriptGeneratorService {
             try(Response response = client.newCall(request).execute()) {
 
                 byte[] bytes = response.body().bytes();
+
                 for (byte aByte : bytes) {
                     mp3ByteArray.add(aByte);
                 }
