@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -74,15 +73,15 @@ public class PodcastSchedulerService {
 
     public void saveToS3(Dongcode sgg, UserRole role, byte[] ttsResult) {
         // TODO S3 객체 키 생성
-        String objectKey = s3ManagerService.generateObjectKey( sgg.getDongCd(), role.getRoleName());
-        //objectKey : "11100000000_NORMAL.mp3"
+        String fileName = s3ManagerService.generateObjectKey( sgg.getDongCd(), role.getRoleName());
+        //fileName : "11100000000_NORMAL.mp3"
 
 
         // TODO TTS 사용 시, mp3 업로드
-        String podcastUrl = s3ManagerService.uploadPodcast(ttsResult, objectKey); // mp3 데이터, 경로
+        String podcastUrl = s3ManagerService.uploadPodcast(ttsResult, fileName); // mp3 데이터, 경로
 
         // 현재 Clova TTS 미사용, S3에 이미 mp3 파일이 있다고 가정
-        //String podcastUrl = s3ManagerService.getPodcastUrl(objectKey);
+        //String podcastUrl = s3ManagerService.getPodcastUrl(fileName);
         log.info("팟캐스트 S3 URL 획득 완료: {}", podcastUrl);
     }
 

@@ -27,12 +27,10 @@ public class PodcastS3ManagerService {
     }
 
 
-    //TODO
      // S3에 팟캐스트 파일을 업로드하고, 공개 URL을 반환합니다.
      // objectKey S3 객체 키
-    public String uploadPodcast(byte[] ttsResult, String objectKey) {
-        //s3Service.uploadFile(filePath, objectKey); // S3Service에 uploadFile 메서드 추가 필요
-        // 공개 URL 반환
-        return s3Service.getPublicUrl(objectKey);
+    public String uploadPodcast(byte[] ttsResult, String fileName) {
+        s3Service.uploadTtsMp3(ttsResult, fileName);
+        return s3Service.getPublicUrl(fileName);
     }
 }

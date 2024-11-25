@@ -10,6 +10,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.UUID;
 
 @Service
@@ -84,4 +86,33 @@ public class S3Service {
                 || "webp".equalsIgnoreCase(extension);
     }
 
+    public String uploadTtsMp3(byte[] mp3Data, String fileName) {
+        try {
+            // 입력 스트림 생성
+            InputStream inputStream = new ByteArrayInputStream(mp3Data);
+
+            // 메타데이터 설정
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentType("audio/mpeg");
+            metadata.setContentLength(mp3Data.length);
+
+            // 파일 이름에 .mp3 확장자가 없으면 추가
+            if (!fileName.toLowerCase().endsWith(".mp3")) {
+                fileName += ".mp3";
+            }
+
+            // S3에 업로드
+            PutObjectRequest putObjectRequest = new PutObjectRequest(
+                    bucket,
+                    fileName,
+                    inputStream,
+                    metadata
+            );
+            amazonS3.putObject(putObjectRequest);
+
+            return amazonS3.getUrl(bucket, fileName).toString();
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Failed to upload MP3 file to S3");
+        }
+    }
 }
