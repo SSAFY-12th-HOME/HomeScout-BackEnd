@@ -9,7 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +23,6 @@ public class PodcastSchedulerService {
     private final NewsCrawlerService newsCrawlerService;
     private final PodcastScriptGeneratorService scriptGeneratorService;
     private final PodcastS3ManagerService s3ManagerService;
-    // private final ClovaTtsService clovaTtsService; Clova TTS 사용 시 활성화
 
 
     @Scheduled(cron = "0 0 6 * * *")
@@ -41,30 +42,48 @@ public class PodcastSchedulerService {
                     log.info("뉴스 데이터 수집 완료: 시군구={}, 기사 수={}",  sgg.getSggNm(), articles.size());
 
                     // 2. 팟캐스트 대본 생성
-                    String podcastScriptText = scriptGeneratorService.generatePodcastScript(articles, role.getRoleName());
+                    ArrayList<String[]> podcastScriptText = scriptGeneratorService.generatePodcastScript(articles, role.getRoleName());
                     log.info("팟캐스트 대본 생성 완료: 시군구={}, 역할={}",  sgg.getSggNm(), role.getRoleName());
 
-                    // TODO TTS 처리 (Clova TTS 사용 시 활성화)
+                    // TODO TTS 처리 : 대사들을 모두 합친 바이트 파일
+                    ArrayList<Byte> result = scriptGeneratorService.generateVoice(podcastScriptText);
 
-                    // 4. S3 객체 키 생성 및 mp3 업로드
-                    String objectKey = s3ManagerService.generateObjectKey( sgg.getSggNm(), role.getRoleName());
+                    byte[] resultCombine = new byte[result.size()];
+
+                    for (int i = 0; i < result.size(); i++) {
+                        resultCombine[i] = result.get(i);
+                    } //모든 바이트가 합쳐진 결과 생성 == resultCombine
 
 
-                    // TODO TTS 사용 시, mp3 업로드
-                    // String podcastUrl = s3ManagerService.uploadPodcast(ttsFilePath, objectKey);
-
-                    // 현재 Clova TTS 미사용, S3에 이미 mp3 파일이 있다고 가정
-                    String podcastUrl = s3ManagerService.getPodcastUrl(objectKey);
-                    log.info("팟캐스트 S3 URL 획득 완료: {}", podcastUrl);
+                    //S3에 지역코드_ROLE.mp3 로 저장
+                    saveToS3(sgg, role, resultCombine);
 
                 } catch (Exception e) {
                     log.error("팟캐스트 생성 실패: 시군구={}, 역할={}, 오류={}",  sgg.getSggNm(), role.getRoleName(), e.getMessage());
                     // 필요에 따라 예외를 처리하거나 알림을 보낼 수 있습니다.
                 }
+                //테스트용
+                break;
             }
+            //테스트용
+            break;
         }
 
         log.info("팟캐스트 생성 스케줄러 완료.");
+    }
+
+    public void saveToS3(Dongcode sgg, UserRole role, byte[] ttsResult) {
+        // TODO S3 객체 키 생성
+        String objectKey = s3ManagerService.generateObjectKey( sgg.getDongCd(), role.getRoleName());
+        //objectKey : "11100000000_NORMAL.mp3"
+
+
+        // TODO TTS 사용 시, mp3 업로드
+        String podcastUrl = s3ManagerService.uploadPodcast(ttsResult, objectKey); // mp3 데이터, 경로
+
+        // 현재 Clova TTS 미사용, S3에 이미 mp3 파일이 있다고 가정
+        //String podcastUrl = s3ManagerService.getPodcastUrl(objectKey);
+        log.info("팟캐스트 S3 URL 획득 완료: {}", podcastUrl);
     }
 
 }
