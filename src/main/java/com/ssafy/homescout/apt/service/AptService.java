@@ -105,11 +105,11 @@ public class AptService {
         // 아파트 정보 초기화
         AptInfo aptInfo = AptInfo.builder()
                 .aptNm(apt.getAptNm())
-                .address(aptAddress)
+                .address(aptAddress.replace("-0", ""))
                 .homeCnt(homeCnt) //세대수
                 .buildYear(apt.getBuildYear())
-                .far(far) //용적률
-                .bcr(bcr) //건폐율
+                .far(Math.round(far*10)/10.0) //용적률
+                .bcr(Math.round(bcr*10)/10.0) //건폐율
                 .flrCnt(flr) //지상층수
                 .latitude(apt.getLatitude())
                 .longitude(apt.getLongitude())
@@ -121,6 +121,7 @@ public class AptService {
             o.setPrice(NumberUtil.convertPrice(o.getPrice()));
             o.setDeposit(NumberUtil.convertPrice(o.getDeposit()));
             o.setRentalFee(NumberUtil.convertPrice(o.getRentalFee()));
+            o.setArea(o.getArea().replace(".00", ""));
         });
 
         // 거래 내역 불러오기 (최근 5개만 불러오게 해놈)

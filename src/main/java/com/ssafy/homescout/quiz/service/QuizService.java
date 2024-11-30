@@ -93,6 +93,8 @@ public class QuizService {
                 quizMapper.insertQuizOption(quizOption);
             }
         }
+
+        quizMapper.updateExp();
     }
 
     public void deleteQuiz(Long userId, Long quizId) {

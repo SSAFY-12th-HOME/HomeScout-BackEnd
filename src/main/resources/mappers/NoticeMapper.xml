@@ -9,7 +9,8 @@
         select notice_id,
                title,
                DATE_FORMAT(created_at, '%Y-%m-%d')
-               from notice;
+               from notice
+        order by notice_id desc
     </select>
 
 

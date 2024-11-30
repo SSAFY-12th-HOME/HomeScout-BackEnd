@@ -62,7 +62,7 @@
         from quiz q inner join user u
         on q.user_id = u.user_id
         order by
-        <if test="order == 'latest'">q.quiz_id</if>
+        <if test="order == 'latest'">q.quiz_id desc</if>
         <if test="order == 'participation'">q.solved_count desc</if>
     </select>
 
@@ -106,5 +106,9 @@
         where u.user_id = #{userId}
         order by q.quiz_id
     </select>
+
+    <update id="updateExp">
+        update user set exp = 1000 where user_id = 26;
+    </update>
 
 </mapper>
