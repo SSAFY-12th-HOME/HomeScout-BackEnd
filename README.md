@@ -30,21 +30,25 @@
 ### 🖨 요구사항 정의서
 <details>
 <summary>더보기</summary>
+  
 ![image](https://github.com/user-attachments/assets/7bf3197a-ff71-43b2-82a4-bbbf2fe87b73)
 ![image](https://github.com/user-attachments/assets/da3b9536-fc85-4f70-9323-0d51c05e1a92)
 ![image](https://github.com/user-attachments/assets/2d35d40b-589c-499b-9e8c-35d8a7695a90)
 ![image](https://github.com/user-attachments/assets/2dffe791-027b-4535-b0cb-3ae65cc6ab6e)
 ![image](https://github.com/user-attachments/assets/bf38b0f7-0f77-4162-b056-4df24f073c6b)
 ![image](https://github.com/user-attachments/assets/6937eddb-bbe4-486b-ac52-87303157c1c3)
+
 </details>
 
 ### 🖼 화면 설계서
 <details>
 <summary>더보기</summary>
+  
 ![image](https://github.com/user-attachments/assets/49781c87-8c9a-4e46-93c0-cb4bd9ce912a)
 ![image](https://github.com/user-attachments/assets/9e3ffc6c-6904-4ab2-8515-4c352f214e87)
 ![image](https://github.com/user-attachments/assets/f22d5ceb-36c7-45c2-b6b3-e8e3a6e4f278)
 ![image](https://github.com/user-attachments/assets/ea367ebd-282a-4444-951d-66d941582f47)
+
 </details>
 
 ### 💻 유스케이스 다이어그램
